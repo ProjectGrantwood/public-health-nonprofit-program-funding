@@ -2,12 +2,13 @@ package com.publichealthnonprofit.programfunding.entity;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import com.publichealthnonprofit.programfunding.entity.joinedEntities.ProgramDonation;
+import com.publichealthnonprofit.programfunding.entity.joinedEntities.ProgramFinancialGrant;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -29,18 +30,13 @@ public class Program {
     
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToMany(mappedBy = "programs", cascade = CascadeType.PERSIST)
-    private Set<FinancialGrant> financialGrants = new HashSet<>();
+    @OneToMany(mappedBy = "program", cascade = CascadeType.PERSIST)
+    private Set<ProgramFinancialGrant> financialGrants = new HashSet<>();
     
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(
-        name = "program_donation",
-        joinColumns = @JoinColumn(name = "program_id"),
-        inverseJoinColumns = @JoinColumn(name = "donation_id")
-    )
-    private Set<Donation> donations = new HashSet<>();
+    @OneToMany(mappedBy = "program", cascade = CascadeType.ALL)
+    private Set<ProgramDonation> donations = new HashSet<>();
     
     // Data
     

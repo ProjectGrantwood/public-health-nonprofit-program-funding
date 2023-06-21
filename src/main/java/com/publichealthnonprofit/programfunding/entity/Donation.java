@@ -4,13 +4,15 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.publichealthnonprofit.programfunding.entity.joinedEntities.ProgramDonation;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -42,6 +44,6 @@ public class Donation {
     
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToMany(mappedBy = "donations", cascade = CascadeType.PERSIST)
-    private Set<Program> programs = new HashSet<>();
+    @OneToMany(mappedBy = "donation", cascade = CascadeType.ALL)
+    private Set<ProgramDonation> programs = new HashSet<>();
 }

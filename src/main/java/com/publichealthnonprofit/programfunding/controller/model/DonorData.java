@@ -2,7 +2,7 @@ package com.publichealthnonprofit.programfunding.controller.model;
 
 import java.sql.Date;
 import java.util.List;
-import com.publichealthnonprofit.programfunding.controller.model.DonationData.DonationProgram;
+import com.publichealthnonprofit.programfunding.controller.model.DonationData.DonationProgramData;
 import com.publichealthnonprofit.programfunding.entity.Donation;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,13 +40,13 @@ public class DonorData {
         private Long donationId;
         private Double donationAmount;
         private Date donationDate;
-        private List<DonationProgram> programs;
+        private List<DonationProgramData> programs;
         
         DonorDonation(Donation donation) {
             this.donationId = donation.getDonationId();
             this.donationAmount = donation.getDonationAmount();
             this.donationDate = donation.getDonationDate();
-            this.programs = donation.getPrograms().stream().map(DonationProgram::new).toList();
+            this.programs = donation.getPrograms().stream().map(DonationProgramData::new).toList();
         }
         
     }

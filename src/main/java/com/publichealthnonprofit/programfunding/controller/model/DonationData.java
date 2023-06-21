@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.publichealthnonprofit.programfunding.entity.Donation;
 import com.publichealthnonprofit.programfunding.entity.Donor;
-import com.publichealthnonprofit.programfunding.entity.Program;
+import com.publichealthnonprofit.programfunding.entity.joinedEntities.ProgramDonation;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,14 +17,14 @@ public class DonationData {
     private Double donationAmount;
     private Date donationDate;
     private DonationDonor donor;
-    private List<DonationProgram> programs;
+    private List<DonationProgramData> programs;
     
     DonationData(Donation donation){
         this.donationId = donation.getDonationId();
         this.donationAmount = donation.getDonationAmount();
         this.donationDate = donation.getDonationDate();
         this.donor = new DonationDonor(donation.getDonor());
-        this.programs = donation.getPrograms().stream().map(DonationProgram::new).toList();
+        this.programs = donation.getPrograms().stream().map(DonationProgramData::new).toList();
     }
     
     @Data
@@ -50,19 +50,16 @@ public class DonationData {
     
     @Data
     @NoArgsConstructor
-    public static class DonationProgram {
-        private Long programId;
-        private String programName;
-        private Double programBudget;
-        private Double programBudgetPercentageGrantFunded;
-        private Double programBudgetPercentageDonationFunded;
+    public static class DonationProgramData {
+        private Long programDonationId;
+        private Double alottedToProgramPercentage;
+        private Double alottedToProgramAmount;
         
-        DonationProgram(Program program){
-            this.programId = program.getProgramId();
-            this.programName = program.getProgramName();
-            this.programBudget = program.getProgramBudget();
-            this.programBudgetPercentageGrantFunded = program.getProgramBudgetPercentageGrantFunded();
-            this.programBudgetPercentageDonationFunded = program.getProgramBudgetPercentageDonationFunded();
+        DonationProgramData(ProgramDonation programDonation){
+            this.programDonationId = programDonation.getProgramDonationId();
+            this.alottedToProgramPercentage = programDonation.getAlottedToProgramPercentage();
+            this.alottedToProgramAmount = programDonation.getAlottedToProgramAmount();
+            
         }
     }
 }

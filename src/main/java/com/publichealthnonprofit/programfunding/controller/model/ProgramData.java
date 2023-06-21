@@ -1,11 +1,10 @@
 package com.publichealthnonprofit.programfunding.controller.model;
 
-import java.sql.Date;
 import java.util.List;
 
-import com.publichealthnonprofit.programfunding.entity.Donation;
-import com.publichealthnonprofit.programfunding.entity.FinancialGrant;
 import com.publichealthnonprofit.programfunding.entity.Program;
+import com.publichealthnonprofit.programfunding.entity.joinedEntities.ProgramDonation;
+import com.publichealthnonprofit.programfunding.entity.joinedEntities.ProgramFinancialGrant;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,8 +18,8 @@ public class ProgramData {
     private Double programBudget;
     private Double programBudgetPercentageGrantFunded;
     private Double programBudgetPercentageDonationFunded;
-    private List<ProgramDonation> donations;
-    private List<ProgramFinancialGrant> financialGrants;
+    private List<ProgramDonationData> donations;
+    private List<ProgramFinancialGrantData> financialGrants;
     
     ProgramData(Program program){
         this.programId = program.getProgramId();
@@ -28,40 +27,36 @@ public class ProgramData {
         this.programBudget = program.getProgramBudget();
         this.programBudgetPercentageGrantFunded = program.getProgramBudgetPercentageGrantFunded();
         this.programBudgetPercentageDonationFunded = program.getProgramBudgetPercentageDonationFunded();
-        this.donations = program.getDonations().stream().map(ProgramDonation::new).toList();
-        this.financialGrants = program.getFinancialGrants().stream().map(ProgramFinancialGrant::new).toList();
+        this.donations = program.getDonations().stream().map(ProgramDonationData::new).toList();
+        this.financialGrants = program.getFinancialGrants().stream().map(ProgramFinancialGrantData::new).toList();
     }
     
     @Data
     @NoArgsConstructor
-    public static class ProgramDonation {
-        private Long donationId;
-        private Date donationDate;
-        private Double donationAmount;
+    public static class ProgramDonationData {
+        private Long programDonationId;
+        private Double alottedToProgramPercentage;
+        private Double alottedToProgramAmount;
         
-        ProgramDonation(Donation donation){
-            this.donationId = donation.getDonationId();
-            this.donationDate = donation.getDonationDate();
-            this.donationAmount = donation.getDonationAmount();
+        ProgramDonationData(ProgramDonation programDonation){
+            this.programDonationId = programDonation.getProgramDonationId();
+            this.alottedToProgramPercentage = programDonation.getAlottedToProgramPercentage();
+            this.alottedToProgramAmount = programDonation.getAlottedToProgramAmount();
         }
         
     }
     
     @Data
     @NoArgsConstructor
-    public static class ProgramFinancialGrant {
-        private Long financialGrantId;
-        private String financialGrantName;
-        private Double financialGrantAmount;
-        private Date financialGrantStartDate;
-        private Date financialGrantEndDate;
+    public static class ProgramFinancialGrantData {
+        private Long programFinancialGrantId;
+        private Double alottedToProgramPercentage;
+        private Double alottedToProgramAmount;
         
-        ProgramFinancialGrant(FinancialGrant financialGrant){
-            this.financialGrantId = financialGrant.getFinancialGrantId();
-            this.financialGrantName = financialGrant.getFinancialGrantName();
-            this.financialGrantAmount = financialGrant.getFinancialGrantAmount();
-            this.financialGrantStartDate = financialGrant.getFinancialGrantStartDate();
-            this.financialGrantEndDate = financialGrant.getFinancialGrantEndDate();
+        ProgramFinancialGrantData(ProgramFinancialGrant programFinancialGrant){
+            this.programFinancialGrantId = programFinancialGrant.getProgramFinancialGrantId();
+            this.alottedToProgramPercentage = programFinancialGrant.getAlottedToProgramPercentage();
+            this.alottedToProgramAmount = programFinancialGrant.getAlottedToProgramAmount();
         }
         
     }

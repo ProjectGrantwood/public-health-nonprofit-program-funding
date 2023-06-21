@@ -1,10 +1,11 @@
 package com.publichealthnonprofit.programfunding.controller.model;
 
 import java.sql.Date;
-
+import java.util.List;
 import com.publichealthnonprofit.programfunding.entity.FinancialGrant;
 import com.publichealthnonprofit.programfunding.entity.GrantingOrg;
 import com.publichealthnonprofit.programfunding.entity.GrantingOrg.GrantingOrgType;
+import com.publichealthnonprofit.programfunding.entity.joinedEntities.ProgramFinancialGrant;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class FinancialGrantData {
     private Date financialGrantStartDate;
     private Date financialGrantEndDate;
     private FinancialGrantGrantingOrg grantingOrg;
+    private List<FinancialGrantProgramData> programs;
     
     FinancialGrantData(FinancialGrant financialGrant){
         this.financialGrantId = financialGrant.getFinancialGrantId();
@@ -27,6 +29,7 @@ public class FinancialGrantData {
         this.financialGrantStartDate = financialGrant.getFinancialGrantStartDate();
         this.financialGrantEndDate = financialGrant.getFinancialGrantEndDate();
         this.grantingOrg = new FinancialGrantGrantingOrg(financialGrant.getGrantingOrg());
+        this.programs = financialGrant.getPrograms().stream().map(FinancialGrantProgramData::new).toList();
     }
     
     @Data
@@ -49,5 +52,19 @@ public class FinancialGrantData {
         }
         
     }
+    
+    @Data
+    @NoArgsConstructor
+    public static class FinancialGrantProgramData {
+        private Long programFinancialGrantId;
+        private Double alottedToProgramPercentage;
+        private Double alottedToProgramAmount;
+        
+        FinancialGrantProgramData(ProgramFinancialGrant programFinancialGrant){
+            this.programFinancialGrantId = programFinancialGrant.getProgramFinancialGrantId();
+            this.alottedToProgramPercentage = programFinancialGrant.getAlottedToProgramPercentage();
+            this.alottedToProgramAmount = programFinancialGrant.getAlottedToProgramAmount();
+        }
+    } 
     
 }
