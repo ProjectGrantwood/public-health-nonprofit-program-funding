@@ -30,7 +30,7 @@ public class Program {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @ManyToMany(mappedBy = "programs", cascade = CascadeType.PERSIST)
-    private Set<FinancialGrant> financial_grants = new HashSet<>();
+    private Set<FinancialGrant> financialGrants = new HashSet<>();
     
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

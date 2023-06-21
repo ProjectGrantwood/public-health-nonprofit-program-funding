@@ -34,7 +34,7 @@ public class FinancialGrant {
     
     @Id
     @GeneratedValue
-    private Long FinancialGrantId;
+    private Long financialGrantId;
     
     // Foreign Keys
     
@@ -46,10 +46,10 @@ public class FinancialGrant {
     
     // Data
     
-    private String FinancialGrantName;
-    private Double FinancialGrantAmount;
-    private Date FinancialGrantStartDate;
-    private Date FinancialGrantEndDate;
+    private String financialGrantName;
+    private Double financialGrantAmount;
+    private Date financialGrantStartDate;
+    private Date financialGrantEndDate;
     
     // For program_grant Join Table
     

@@ -1,9 +1,11 @@
 package com.publichealthnonprofit.programfunding.controller.model;
 
 import java.sql.Date;
-import java.util.Set;
+import java.util.List;
 
+import com.publichealthnonprofit.programfunding.entity.Donation;
 import com.publichealthnonprofit.programfunding.entity.Donor;
+import com.publichealthnonprofit.programfunding.entity.Program;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,12 +16,20 @@ public class DonationData {
     private Long donationId;
     private Double donationAmount;
     private Date donationDate;
-    private CollectionlessDonor donor;
-    private Set<CollectionlessProgram> programs;
+    private DonationDonor donor;
+    private List<DonationProgram> programs;
+    
+    DonationData(Donation donation){
+        this.donationId = donation.getDonationId();
+        this.donationAmount = donation.getDonationAmount();
+        this.donationDate = donation.getDonationDate();
+        this.donor = new DonationDonor(donation.getDonor());
+        this.programs = donation.getPrograms().stream().map(DonationProgram::new).toList();
+    }
     
     @Data
     @NoArgsConstructor
-    public static class CollectionlessDonor {
+    public static class DonationDonor {
         private Long donorId;
         private String donorName;
         private String donorEmail;
@@ -27,7 +37,7 @@ public class DonationData {
         private String donorAddress;
         private String donorAffiliation;
         
-        CollectionlessDonor(Donor donor){
+        DonationDonor(Donor donor){
             this.donorId = donor.getDonorId();
             this.donorName = donor.getDonorName();
             this.donorEmail = donor.getDonorEmail();
@@ -40,11 +50,19 @@ public class DonationData {
     
     @Data
     @NoArgsConstructor
-    public static class CollectionlessProgram {
+    public static class DonationProgram {
         private Long programId;
         private String programName;
         private Double programBudget;
-        private Double programPercentageGrantFunded;
-        private Double programPercentageDonationFunded;
+        private Double programBudgetPercentageGrantFunded;
+        private Double programBudgetPercentageDonationFunded;
+        
+        DonationProgram(Program program){
+            this.programId = program.getProgramId();
+            this.programName = program.getProgramName();
+            this.programBudget = program.getProgramBudget();
+            this.programBudgetPercentageGrantFunded = program.getProgramBudgetPercentageGrantFunded();
+            this.programBudgetPercentageDonationFunded = program.getProgramBudgetPercentageDonationFunded();
+        }
     }
 }

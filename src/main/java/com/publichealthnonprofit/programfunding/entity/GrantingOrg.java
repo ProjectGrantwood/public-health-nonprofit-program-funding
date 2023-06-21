@@ -33,7 +33,7 @@ public class GrantingOrg {
     private String grantingOrgContactName;
     private String grantingOrgContactEmail;
     private String grantingOrgContactPhone;
-    private String grantingOrgType;
+    private GrantingOrgType grantingOrgType;
     
     // For referencing granting organizations in the grant table
     
