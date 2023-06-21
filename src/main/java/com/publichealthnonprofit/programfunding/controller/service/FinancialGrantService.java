@@ -1,5 +1,5 @@
 package com.publichealthnonprofit.programfunding.controller.service;
 
-public class ProgramFundingService {
+public class FinancialGrantService {
     
 }
