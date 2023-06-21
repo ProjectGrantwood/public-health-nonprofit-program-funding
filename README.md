@@ -7,4 +7,4 @@ This repository contains all process documents, code, and documentation for my f
 
 The database architecture is meant to reflect organizational tracking of funding sources for a fictional nonprofit focusing on Public Health. I came up with this idea in consultation with my endlessly loving, hard-working, beautiful wife Liz, who is a program manager for a public health nonprofit (...when she's not working overnight as a bedside nurse). This project, not to mention my career as a developer, would not exist without her support.
 
-**_For more information on the project details, please refer to the proposal document located in the src/main/resources/static folder!_**
+**For more information on the project details, please refer to the proposal document located in the** _src/main/resources/static_ **folder!**
