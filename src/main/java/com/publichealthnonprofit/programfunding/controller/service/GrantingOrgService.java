@@ -7,7 +7,7 @@ import com.publichealthnonprofit.programfunding.entity.GrantingOrg;
 
 public class GrantingOrgService {
 
-    public void deleteGrantingOrgById(Long grantingOrgId) {
+    public void deleteGrantingOrg(Long grantingOrgId) {
     }
 
     public GrantingOrgData findGrantingOrgById(Long grantingOrgId) {
@@ -22,7 +22,7 @@ public class GrantingOrgService {
         return null;
     }
 
-    public GrantingOrgData updateGrantingOrgById(Long grantingOrgId, GrantingOrg grantingOrg) {
+    public GrantingOrgData updateGrantingOrg(Long grantingOrgId, GrantingOrg grantingOrg) {
         return null;
     }
     
