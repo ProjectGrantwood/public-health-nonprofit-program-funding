@@ -13,19 +13,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FinancialGrantData {
     
-    private Long FinancialGrantId;
-    private String FinancialGrantName;
-    private Double FinancialGrantAmount;
-    private Date FinancialGrantStartDate;
-    private Date FinancialGrantEndDate;
+    private Long financialGrantId;
+    private String financialGrantName;
+    private Double financialGrantAmount;
+    private Date financialGrantStartDate;
+    private Date financialGrantEndDate;
     private FinancialGrantGrantingOrg grantingOrg;
     
     FinancialGrantData(FinancialGrant financialGrant){
-        this.FinancialGrantId = financialGrant.getFinancialGrantId();
-        this.FinancialGrantName = financialGrant.getFinancialGrantName();
-        this.FinancialGrantAmount = financialGrant.getFinancialGrantAmount();
-        this.FinancialGrantStartDate = financialGrant.getFinancialGrantStartDate();
-        this.FinancialGrantEndDate = financialGrant.getFinancialGrantEndDate();
+        this.financialGrantId = financialGrant.getFinancialGrantId();
+        this.financialGrantName = financialGrant.getFinancialGrantName();
+        this.financialGrantAmount = financialGrant.getFinancialGrantAmount();
+        this.financialGrantStartDate = financialGrant.getFinancialGrantStartDate();
+        this.financialGrantEndDate = financialGrant.getFinancialGrantEndDate();
         this.grantingOrg = new FinancialGrantGrantingOrg(financialGrant.getGrantingOrg());
     }
     
