@@ -1,11 +1,14 @@
 package com.publichealthnonprofit.programfunding.controller.model;
 
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.publichealthnonprofit.programfunding.entity.FinancialGrant;
 import com.publichealthnonprofit.programfunding.entity.GrantingOrg;
 import com.publichealthnonprofit.programfunding.entity.GrantingOrg.GrantingOrgType;
-import com.publichealthnonprofit.programfunding.entity.joinedEntities.ProgramFinancialGrant;
+import com.publichealthnonprofit.programfunding.entity.Program;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,16 +23,17 @@ public class FinancialGrantData {
     private Date financialGrantStartDate;
     private Date financialGrantEndDate;
     private FinancialGrantGrantingOrg grantingOrg;
-    private List<FinancialGrantProgramData> programs;
+    private List<FinancialGrantProgram> programs;
+    private Map<Long, Double> programAllotments = new HashMap<>();
     
-    FinancialGrantData(FinancialGrant financialGrant){
+    public FinancialGrantData(FinancialGrant financialGrant){
         this.financialGrantId = financialGrant.getFinancialGrantId();
         this.financialGrantName = financialGrant.getFinancialGrantName();
         this.financialGrantAmount = financialGrant.getFinancialGrantAmount();
         this.financialGrantStartDate = financialGrant.getFinancialGrantStartDate();
         this.financialGrantEndDate = financialGrant.getFinancialGrantEndDate();
         this.grantingOrg = new FinancialGrantGrantingOrg(financialGrant.getGrantingOrg());
-        this.programs = financialGrant.getPrograms().stream().map(FinancialGrantProgramData::new).toList();
+        this.programs = financialGrant.getPrograms().stream().map(FinancialGrantProgram::new).toList();
     }
     
     @Data
@@ -42,7 +46,7 @@ public class FinancialGrantData {
         private String grantingOrgContactPhone;
         private GrantingOrgType grantingOrgType;
         
-        FinancialGrantGrantingOrg(GrantingOrg grantingOrg){
+        public FinancialGrantGrantingOrg(GrantingOrg grantingOrg){
             this.grantingOrgId = grantingOrg.getGrantingOrgId();
             this.grantingOrgName = grantingOrg.getGrantingOrgName();
             this.grantingOrgContactName = grantingOrg.getGrantingOrgContactName();
@@ -55,15 +59,20 @@ public class FinancialGrantData {
     
     @Data
     @NoArgsConstructor
-    public static class FinancialGrantProgramData {
-        private Long programFinancialGrantId;
-        private Double alottedToProgramPercentage;
-        private Double alottedToProgramAmount;
+    public static class FinancialGrantProgram {
+        private Long programId;
+        private String programName;
+        private Double programBudget;
+        private Double programBudgetPercentageGrantFunded;
+        private Double programBudgetPercentageDonationFunded;
         
-        FinancialGrantProgramData(ProgramFinancialGrant programFinancialGrant){
-            this.programFinancialGrantId = programFinancialGrant.getProgramFinancialGrantId();
-            this.alottedToProgramPercentage = programFinancialGrant.getAlottedToProgramPercentage();
-            this.alottedToProgramAmount = programFinancialGrant.getAlottedToProgramAmount();
+        public FinancialGrantProgram(Program program){
+            this.programId = program.getProgramId();
+            this.programName = program.getProgramName();
+            this.programBudget = program.getProgramBudget();
+            this.programBudgetPercentageGrantFunded = program.getProgramBudgetPercentageGrantFunded();
+            this.programBudgetPercentageDonationFunded = program.getProgramBudgetPercentageDonationFunded();
+            
         }
     } 
     

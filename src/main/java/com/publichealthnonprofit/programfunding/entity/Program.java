@@ -2,13 +2,11 @@ package com.publichealthnonprofit.programfunding.entity;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.publichealthnonprofit.programfunding.entity.joinedEntities.ProgramDonation;
-import com.publichealthnonprofit.programfunding.entity.joinedEntities.ProgramFinancialGrant;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -26,24 +24,34 @@ public class Program {
     @GeneratedValue
     private Long programId;
     
-    // Foriegn Key
-    
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @OneToMany(mappedBy = "program", cascade = CascadeType.PERSIST)
-    private Set<ProgramFinancialGrant> financialGrants = new HashSet<>();
-    
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @OneToMany(mappedBy = "program", cascade = CascadeType.ALL)
-    private Set<ProgramDonation> donations = new HashSet<>();
-    
     // Data
     
     private String programName;
     private Double programBudget;
     private Double programBudgetPercentageGrantFunded;
     private Double programBudgetPercentageDonationFunded;
+    
+    // Foriegn Key
+    
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(
+        name = "program_financial_grant", 
+        joinColumns = @JoinColumn(name = "program_id"),
+        inverseJoinColumns = @JoinColumn(name = "financial_grant_id"))
+    private Set<FinancialGrant> financialGrants = new HashSet<>();
+    
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(
+        name = "program_donation",
+        joinColumns = @JoinColumn(name = "program_id"),
+        inverseJoinColumns = @JoinColumn(name = "donation_id"))
+    private Set<Donation> donations = new HashSet<>();
+    
+
     
     
     

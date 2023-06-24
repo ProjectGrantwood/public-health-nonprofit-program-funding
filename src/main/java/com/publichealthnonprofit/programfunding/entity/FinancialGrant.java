@@ -3,14 +3,11 @@ package com.publichealthnonprofit.programfunding.entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-
 import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.publichealthnonprofit.programfunding.entity.joinedEntities.ProgramFinancialGrant;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -37,6 +34,13 @@ public class FinancialGrant {
     @GeneratedValue
     private Long financialGrantId;
     
+    // Data
+    
+    private String financialGrantName;
+    private Double financialGrantAmount;
+    private Date financialGrantStartDate;
+    private Date financialGrantEndDate;
+    
     // Foreign Keys
     
     @EqualsAndHashCode.Exclude
@@ -45,19 +49,14 @@ public class FinancialGrant {
     @JoinColumn(name = "granting_org_id", nullable = false)
     private GrantingOrg grantingOrg;
     
-    // Data
-    
-    private String financialGrantName;
-    private Double financialGrantAmount;
-    private Date financialGrantStartDate;
-    private Date financialGrantEndDate;
+
     
     // For program_grant Join Table
     
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @OneToMany(mappedBy = "financialGrant")
-    private Set<ProgramFinancialGrant> programs = new HashSet<>();
+    @ManyToMany(mappedBy = "financialGrants", cascade = CascadeType.PERSIST)
+    private Set<Program> programs = new HashSet<>();
     
     
 }

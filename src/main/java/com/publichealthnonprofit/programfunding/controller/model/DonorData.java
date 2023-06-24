@@ -2,8 +2,11 @@ package com.publichealthnonprofit.programfunding.controller.model;
 
 import java.sql.Date;
 import java.util.List;
-import com.publichealthnonprofit.programfunding.controller.model.DonationData.DonationProgramData;
+
+import com.publichealthnonprofit.programfunding.controller.model.DonationData.DonationProgram;
 import com.publichealthnonprofit.programfunding.entity.Donation;
+import com.publichealthnonprofit.programfunding.entity.Donor;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -24,14 +27,14 @@ public class DonorData {
     private String donorAffiliation;
     private List<DonorDonation> donations;
     
-    DonorData(Donation donation) {
-        this.donorId = donation.getDonor().getDonorId();
-        this.donorName = donation.getDonor().getDonorName();
-        this.donorEmail = donation.getDonor().getDonorEmail();
-        this.donorPhone = donation.getDonor().getDonorPhone();
-        this.donorAddress = donation.getDonor().getDonorAddress();
-        this.donorAffiliation = donation.getDonor().getDonorAffiliation();
-        this.donations = donation.getDonor().getDonations().stream().map(DonorDonation::new).toList();
+    public DonorData(Donor donor) {
+        this.donorId = donor.getDonorId();
+        this.donorName = donor.getDonorName();
+        this.donorEmail = donor.getDonorEmail();
+        this.donorPhone = donor.getDonorPhone();
+        this.donorAddress = donor.getDonorAddress();
+        this.donorAffiliation = donor.getDonorAffiliation();
+        this.donations = donor.getDonations().stream().map(DonorDonation::new).toList();
     }
     
     @Data
@@ -40,13 +43,13 @@ public class DonorData {
         private Long donationId;
         private Double donationAmount;
         private Date donationDate;
-        private List<DonationProgramData> programs;
+        private List<DonationProgram> programs;
         
-        DonorDonation(Donation donation) {
+        public DonorDonation(Donation donation) {
             this.donationId = donation.getDonationId();
             this.donationAmount = donation.getDonationAmount();
             this.donationDate = donation.getDonationDate();
-            this.programs = donation.getPrograms().stream().map(DonationProgramData::new).toList();
+            this.programs = donation.getPrograms().stream().map(DonationProgram::new).toList();
         }
         
     }

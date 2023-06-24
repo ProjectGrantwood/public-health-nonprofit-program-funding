@@ -38,4 +38,6 @@ public class Donor {
     private Set<Donation> donations = new HashSet<>();
     
     
+    
+    
 }

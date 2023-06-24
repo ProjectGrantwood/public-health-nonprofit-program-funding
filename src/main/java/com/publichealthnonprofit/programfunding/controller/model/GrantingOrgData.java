@@ -21,7 +21,7 @@ public class GrantingOrgData {
     private GrantingOrgType grantingOrgType;
     private List<GrantingOrgFinancialGrant> financialGrants;
     
-    GrantingOrgData(GrantingOrg grantingOrg){
+    public GrantingOrgData(GrantingOrg grantingOrg){
         this.grantingOrgId = grantingOrg.getGrantingOrgId();
         this.grantingOrgName = grantingOrg.getGrantingOrgName();
         this.grantingOrgContactName = grantingOrg.getGrantingOrgContactName();
@@ -40,7 +40,7 @@ public class GrantingOrgData {
         private Date financialGrantStartDate;
         private Date financialGrantEndDate;
         
-        GrantingOrgFinancialGrant(FinancialGrant financialGrant){
+        public GrantingOrgFinancialGrant(FinancialGrant financialGrant){
             this.financialGrantId = financialGrant.getFinancialGrantId();
             this.financialGrantName = financialGrant.getFinancialGrantName();
             this.financialGrantAmount = financialGrant.getFinancialGrantAmount();

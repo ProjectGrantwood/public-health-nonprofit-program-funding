@@ -6,7 +6,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,7 +53,21 @@ public class DonationController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public DonationData createDonation(@RequestParam(required = false) Optional<Long> programId, @RequestBody Donation donation) {
         log.info("Creating donation...");
-        return donationService.createDonation(donation);
+        return donationService.createDonation(donation, programId.get());
+    }
+    
+    @GetMapping("/donation/{donationId}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public DonationData getDonationById(@PathVariable Long donationId) {
+        log.info("Getting donation by ID {}...", donationId);
+        return donationService.getDonationById(donationId);
+    }
+    
+    @PutMapping("/donation/{donationId}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public DonationData updateDonation(@PathVariable Long donationId, @RequestBody Donation donation) {
+        log.info("Updating donation with ID {}...", donationId);
+        return donationService.updateDonation(donationId, donation);
     }
     
 }

@@ -1,12 +1,13 @@
 package com.publichealthnonprofit.programfunding.controller.model;
 
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.publichealthnonprofit.programfunding.entity.Donation;
 import com.publichealthnonprofit.programfunding.entity.Donor;
-import com.publichealthnonprofit.programfunding.entity.joinedEntities.ProgramDonation;
-
+import com.publichealthnonprofit.programfunding.entity.Program;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,14 +18,17 @@ public class DonationData {
     private Double donationAmount;
     private Date donationDate;
     private DonationDonor donor;
-    private List<DonationProgramData> programs;
+    private List<DonationProgram> programs;
     
-    DonationData(Donation donation){
+    // Only used for Put Mappings.
+    private Map<Long, Double> programAllotments = new HashMap<>();
+    
+    public DonationData(Donation donation){
         this.donationId = donation.getDonationId();
         this.donationAmount = donation.getDonationAmount();
         this.donationDate = donation.getDonationDate();
         this.donor = new DonationDonor(donation.getDonor());
-        this.programs = donation.getPrograms().stream().map(DonationProgramData::new).toList();
+        this.programs = donation.getPrograms().stream().map(DonationProgram::new).toList();
     }
     
     @Data
@@ -37,7 +41,7 @@ public class DonationData {
         private String donorAddress;
         private String donorAffiliation;
         
-        DonationDonor(Donor donor){
+        public DonationDonor(Donor donor){
             this.donorId = donor.getDonorId();
             this.donorName = donor.getDonorName();
             this.donorEmail = donor.getDonorEmail();
@@ -50,16 +54,19 @@ public class DonationData {
     
     @Data
     @NoArgsConstructor
-    public static class DonationProgramData {
-        private Long programDonationId;
-        private Double alottedToProgramPercentage;
-        private Double alottedToProgramAmount;
+    public static class DonationProgram {
+        private Long programId;
+        private String programName;
+        private Double programBudget;
+        private Double programBudgetPercentageGrantFunded;
+        private Double programBudgetPercentageDonationFunded;
         
-        DonationProgramData(ProgramDonation programDonation){
-            this.programDonationId = programDonation.getProgramDonationId();
-            this.alottedToProgramPercentage = programDonation.getAlottedToProgramPercentage();
-            this.alottedToProgramAmount = programDonation.getAlottedToProgramAmount();
-            
+        public DonationProgram(Program program){
+            this.programId = program.getProgramId();
+            this.programName = program.getProgramName();
+            this.programBudget = program.getProgramBudget();
+            this.programBudgetPercentageGrantFunded = program.getProgramBudgetPercentageGrantFunded();
+            this.programBudgetPercentageDonationFunded = program.getProgramBudgetPercentageDonationFunded();
         }
     }
 }
