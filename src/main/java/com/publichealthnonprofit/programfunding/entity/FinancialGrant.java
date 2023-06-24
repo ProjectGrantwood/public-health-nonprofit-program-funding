@@ -37,7 +37,7 @@ public class FinancialGrant {
     // Data
     
     private String financialGrantName;
-    private Double financialGrantAmount;
+    private Float financialGrantAmount;
     private Date financialGrantStartDate;
     private Date financialGrantEndDate;
     

@@ -41,7 +41,7 @@ public class DonorData {
     @NoArgsConstructor
     public static class DonorDonation {
         private Long donationId;
-        private Double donationAmount;
+        private Float donationAmount;
         private Date donationDate;
         private List<DonationProgram> programs;
         

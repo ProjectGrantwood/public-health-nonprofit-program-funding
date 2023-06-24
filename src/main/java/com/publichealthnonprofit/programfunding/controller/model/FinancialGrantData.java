@@ -1,10 +1,7 @@
 package com.publichealthnonprofit.programfunding.controller.model;
 
 import java.sql.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import com.publichealthnonprofit.programfunding.entity.FinancialGrant;
 import com.publichealthnonprofit.programfunding.entity.GrantingOrg;
 import com.publichealthnonprofit.programfunding.entity.GrantingOrg.GrantingOrgType;
@@ -19,12 +16,11 @@ public class FinancialGrantData {
     
     private Long financialGrantId;
     private String financialGrantName;
-    private Double financialGrantAmount;
+    private Float financialGrantAmount;
     private Date financialGrantStartDate;
     private Date financialGrantEndDate;
     private FinancialGrantGrantingOrg grantingOrg;
     private List<FinancialGrantProgram> programs;
-    private Map<Long, Double> programAllotments = new HashMap<>();
     
     public FinancialGrantData(FinancialGrant financialGrant){
         this.financialGrantId = financialGrant.getFinancialGrantId();
@@ -62,9 +58,9 @@ public class FinancialGrantData {
     public static class FinancialGrantProgram {
         private Long programId;
         private String programName;
-        private Double programBudget;
-        private Double programBudgetPercentageGrantFunded;
-        private Double programBudgetPercentageDonationFunded;
+        private Float programBudget;
+        private Float programBudgetPercentageGrantFunded;
+        private Float programBudgetPercentageDonationFunded;
         
         public FinancialGrantProgram(Program program){
             this.programId = program.getProgramId();

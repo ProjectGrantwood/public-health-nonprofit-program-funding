@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DonationData {
     private Long donationId;
-    private Double donationAmount;
+    private Float donationAmount;
     private Date donationDate;
     private DonationDonor donor;
     private List<DonationProgram> programs;
@@ -57,9 +57,9 @@ public class DonationData {
     public static class DonationProgram {
         private Long programId;
         private String programName;
-        private Double programBudget;
-        private Double programBudgetPercentageGrantFunded;
-        private Double programBudgetPercentageDonationFunded;
+        private Float programBudget;
+        private Float programBudgetPercentageGrantFunded;
+        private Float programBudgetPercentageDonationFunded;
         
         public DonationProgram(Program program){
             this.programId = program.getProgramId();

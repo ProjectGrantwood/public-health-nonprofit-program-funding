@@ -112,7 +112,7 @@ public class FinancialGrantService {
     private void setUpdatedFieldsInFinancialGrant(FinancialGrant financialGrant, FinancialGrantData financialGrantData) {
         FinancialGrantGrantingOrg updatedGrantingOrg = financialGrantData.getGrantingOrg();
         String updatedFinancialGrantName = financialGrantData.getFinancialGrantName();
-        Double updatedFinancialGrantAmount = financialGrantData.getFinancialGrantAmount();
+        Float updatedFinancialGrantAmount = financialGrantData.getFinancialGrantAmount();
         Date updatedFinancialGrantStartDate = financialGrantData.getFinancialGrantStartDate();
         Date updatedFinancialGrantEndDate = financialGrantData.getFinancialGrantEndDate();
         List<FinancialGrantProgram> updatedFinancialGrantPrograms = financialGrantData.getPrograms();

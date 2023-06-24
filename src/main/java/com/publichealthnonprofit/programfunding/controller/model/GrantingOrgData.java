@@ -36,7 +36,7 @@ public class GrantingOrgData {
     public static class GrantingOrgFinancialGrant {
         private Long financialGrantId;
         private String financialGrantName;
-        private Double financialGrantAmount;
+        private Float financialGrantAmount;
         private Date financialGrantStartDate;
         private Date financialGrantEndDate;
         

@@ -110,7 +110,7 @@ public class DonationService {
     private void setUpdatedFieldsInDonation(Donation donation, DonationData donationData) {
         DonationDonor updatedDonor = donationData.getDonor();
         Date updatedDonationDate = donationData.getDonationDate();
-        Double updatedDonationAmount = donationData.getDonationAmount();
+        Float updatedDonationAmount = donationData.getDonationAmount();
         List<DonationProgram> donationPrograms = donationData.getPrograms();
         if (Objects.nonNull(updatedDonor)) {
             donation.setDonor(donorService.findDonorById(updatedDonor.getDonorId()));
