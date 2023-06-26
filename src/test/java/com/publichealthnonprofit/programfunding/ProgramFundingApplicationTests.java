@@ -1,9 +1,12 @@
 package com.publichealthnonprofit.programfunding;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
-@SpringBootTest
+import com.publichealthnonprofit.programfunding.controller.endpointMappings.ProgramController;
+
+@WebMvcTest(ProgramController.class)
+
 class ProgramFundingApplicationTests {
 
 	@Test

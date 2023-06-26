@@ -43,7 +43,11 @@ public class DonorService {
     @Transactional(readOnly = false)
     public void deleteDonor(Long donorId) {
         Donor donor = findDonorById(donorId);
-        donorDao.delete(donor);
+        if (donor.getDonations().isEmpty()) {
+            donorDao.delete(donor);
+        } else {
+            throw new IllegalArgumentException("Donor with id " + donorId + " cannot be deleted because they have donations associated with them.");
+        }
     }
     
     @Transactional(readOnly = false)

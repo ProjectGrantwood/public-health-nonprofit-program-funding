@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,14 +51,18 @@ public class FinancialGrantController {
     
     @PostMapping("/financial_grant")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public FinancialGrantData createFinancialGrant(@RequestParam(required = false) Optional<Long> programId, @RequestBody FinancialGrant financialGrant) {
-        log.info("Creating financial grant...");
+    public FinancialGrantData createFinancialGrant(@RequestParam(required = true) Optional<Long> grantingOrgId, @RequestParam(required = false) Optional<Long> programId, @RequestBody FinancialGrant financialGrant) {
+        if (grantingOrgId.isEmpty()){
+            log.warn("Granting organization ID is required.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Granting organization ID is required.");
+        }
         if (programId.isPresent()) {
             Long programIdValue = programId.get();
-            log.info("Getting program ID {}...", programIdValue);
-            return financialGrantService.createFinancialGrant(financialGrant, programIdValue);
+            log.info("Creating grant associated with program ID {}...", programIdValue);
+            return financialGrantService.createFinancialGrant(financialGrant, grantingOrgId.get(), programIdValue);
         }
-        return financialGrantService.createFinancialGrant(financialGrant);
+        log.info("Creating financial grant...");
+        return financialGrantService.createFinancialGrant(financialGrant, grantingOrgId.get());
     }
     
     @GetMapping("/financial_grant/{financialGrantId}")
@@ -72,6 +77,13 @@ public class FinancialGrantController {
     public FinancialGrantData updateFinancialGrant(@PathVariable Long financialGrantId, @RequestBody FinancialGrant financialGrant) {
         log.info("Updating financial grant with ID {}...", financialGrantId);
         return financialGrantService.updateFinancialGrant(financialGrantId, financialGrant);
+    }
+    
+    @DeleteMapping("/financial_grant/{financialGrantId}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void deleteFinancialGrant(@PathVariable Long financialGrantId) {
+        log.info("Deleting financial grant with ID {}...", financialGrantId);
+        financialGrantService.deleteFinancialGrant(financialGrantId);
     }
     
 }

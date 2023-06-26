@@ -3,6 +3,7 @@ package com.publichealthnonprofit.programfunding.controller.endpointMappings;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,6 +52,13 @@ public class GrantingOrgController {
     public GrantingOrgData updateGrantingOrg(@PathVariable Long grantingOrgId, @RequestBody GrantingOrg grantingOrg) {
         log.info("Updating granting organization with ID {}...", grantingOrgId);
         return grantingOrgService.updateGrantingOrg(grantingOrgId, grantingOrg);
+    }
+    
+    @DeleteMapping("/grantingOrg/{grantingOrgId}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void deleteGrantingOrg(@PathVariable Long grantingOrgId) {
+        log.info("Deleting granting organization with ID {}...", grantingOrgId);
+        grantingOrgService.deleteGrantingOrg(grantingOrgId);
     }
     
 }

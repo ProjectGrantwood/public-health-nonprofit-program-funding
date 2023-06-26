@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.publichealthnonprofit.programfunding.controller.model.ProgramData;
 import com.publichealthnonprofit.programfunding.controller.service.ProgramService;
+import com.publichealthnonprofit.programfunding.entity.Program;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -85,9 +86,9 @@ public class ProgramController {
     
     @PostMapping("/program")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ProgramData createProgram(@RequestBody ProgramData programData) {
+    public ProgramData createProgram(@RequestBody Program program) {
         log.info("Creating program...");
-        return programService.createProgram(programData);
+        return programService.createProgram(program);
     }
     
     @GetMapping("/program/{programId}")
@@ -99,9 +100,23 @@ public class ProgramController {
     
     @PutMapping("/program/{programId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public ProgramData updateProgram(@PathVariable Long programId, @RequestBody ProgramData programData) {
+    public ProgramData updateProgram(@PathVariable Long programId, @RequestBody Program program, @RequestParam(required = false) Optional<Long> financialGrantId, @RequestParam(required = false) Optional<Long> donationId) {
         log.info("Updating program with ID {}...", programId);
-        return programService.updateProgram(programId, programData);
+        boolean financialGrantIdPresent = financialGrantId.isPresent();
+        boolean donationIdPresent = donationId.isPresent();
+        if (financialGrantIdPresent && donationIdPresent){
+            log.warn("Both financial grant ID and donation ID are present. Only one is allowed at a time.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Both financial grant ID and donation ID are present. Only one is allowed at a time.");
+        } else if (financialGrantIdPresent) {
+            Long financialGrantIdValue = financialGrantId.get();
+            log.info("Adding financial grant with ID {} to program with ID {}...", financialGrantIdValue, programId);
+            return programService.addFinancialGrant(programId, financialGrantIdValue);
+        } else if (donationIdPresent) {
+            Long donationIdValue = donationId.get();
+            log.info("Adding donation with ID {} to program with ID {}...", donationIdValue, programId);
+            return programService.addDonation(programId, donationIdValue);
+        }
+        return programService.updateProgram(programId, program);
     }
     
     @DeleteMapping("/program/{programId}")

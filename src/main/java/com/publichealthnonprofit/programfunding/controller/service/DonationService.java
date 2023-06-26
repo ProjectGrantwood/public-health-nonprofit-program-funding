@@ -15,7 +15,10 @@ import com.publichealthnonprofit.programfunding.controller.model.DonationData;
 import com.publichealthnonprofit.programfunding.controller.model.DonationData.DonationDonor;
 import com.publichealthnonprofit.programfunding.controller.model.DonationData.DonationProgram;
 import com.publichealthnonprofit.programfunding.dao.DonationDao;
+import com.publichealthnonprofit.programfunding.dao.DonorDao;
+import com.publichealthnonprofit.programfunding.dao.ProgramDao;
 import com.publichealthnonprofit.programfunding.entity.Donation;
+import com.publichealthnonprofit.programfunding.entity.Donor;
 import com.publichealthnonprofit.programfunding.entity.Program;
 
 @Service
@@ -25,10 +28,10 @@ public class DonationService {
     private DonationDao donationDao;
     
     @Autowired
-    private DonorService donorService;
+    private DonorDao donorDao;
     
     @Autowired
-    private ProgramService programService;
+    private ProgramDao programDao;
 
     @Transactional(readOnly = true)
     public List<DonationData> getAllDonationsByDonorId(Long donorIdValue) {
@@ -56,7 +59,7 @@ public class DonationService {
     @Transactional(readOnly = false)
     public DonationData createDonation(Donation donation, Long programIdValue) {
         DonationData donationData = new DonationData(donation);
-        donationData.setPrograms(List.of(new DonationProgram(programService.findProgramById(programIdValue))));
+        donationData.setPrograms(List.of(new DonationProgram(findProgramById(programIdValue))));
         return saveDonationFromDonationData(donationData);
     }
 
@@ -91,16 +94,17 @@ public class DonationService {
         return donation;
     }
     
+    @Transactional(readOnly = true)
     private Donation findDonationById(Long donationId) {
         return donationDao.findById(donationId).orElseThrow(() -> new NoSuchElementException("Donation not found for id " + donationId));
     }
     
     private void setFieldsInDonation(Donation donation, DonationData donationData) {
-        donation.setDonor(donorService.findDonorById(donationData.getDonor().getDonorId()));
+        donation.setDonor(findDonorById(donationData.getDonor().getDonorId()));
         Set<Program> programs = new HashSet<>();
         List<DonationProgram> donationPrograms = donationData.getPrograms();
         for (DonationProgram donationProgram : donationPrograms) {
-            programs.add(programService.findProgramById(donationProgram.getProgramId()));
+            programs.add(findProgramById(donationProgram.getProgramId()));
         }
         donation.setPrograms(programs);
         donation.setDonationAmount(donationData.getDonationAmount());
@@ -113,7 +117,7 @@ public class DonationService {
         Float updatedDonationAmount = donationData.getDonationAmount();
         List<DonationProgram> donationPrograms = donationData.getPrograms();
         if (Objects.nonNull(updatedDonor)) {
-            donation.setDonor(donorService.findDonorById(updatedDonor.getDonorId()));
+            donation.setDonor(findDonorById(updatedDonor.getDonorId()));
         }
         if (Objects.nonNull(updatedDonationDate)) {
             donation.setDonationDate(updatedDonationDate);
@@ -124,7 +128,7 @@ public class DonationService {
         if (Objects.nonNull(donationPrograms)) {
             Set<Program> programs = new HashSet<>();
             for (DonationProgram donationProgram : donationPrograms) {
-                Program program = programService.findProgramById(donationProgram.getProgramId());
+                Program program = findProgramById(donationProgram.getProgramId());
                 if (!donation.getPrograms().contains(program)) {
                     programs.add(program);
                 }
@@ -132,6 +136,16 @@ public class DonationService {
             donation.setPrograms(programs);
         }
         
+    }
+    
+    @Transactional(readOnly = true)
+    public Program findProgramById(Long programId){
+        return programDao.findById(programId).orElseThrow(() -> new NoSuchElementException("Program not found for id " + programId));
+    }
+    
+    @Transactional(readOnly = true)
+    public Donor findDonorById(Long donorId){
+        return donorDao.findById(donorId).orElseThrow(() -> new NoSuchElementException("Donor not found for id " + donorId));
     }
     
 }

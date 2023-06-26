@@ -53,7 +53,7 @@ public class DonationController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public DonationData createDonation(@RequestParam(required = false) Optional<Long> programId, @RequestBody Donation donation) {
         log.info("Creating donation...");
-        return donationService.createDonation(donation, programId.get());
+        return programId.isPresent() ? donationService.createDonation(donation, programId.get()) : donationService.createDonation(donation);
     }
     
     @GetMapping("/donation/{donationId}")

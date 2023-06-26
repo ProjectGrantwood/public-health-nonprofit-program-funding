@@ -15,7 +15,6 @@ import com.publichealthnonprofit.programfunding.entity.GrantingOrg.GrantingOrgTy
 @Service
 public class GrantingOrgService {
     
-    @SuppressWarnings("unused")
     @Autowired
     private GrantingOrgDao grantingOrgDao;
 
@@ -45,6 +44,16 @@ public class GrantingOrgService {
         GrantingOrg grantingOrg = findOrCreateGrantingOrg(grantingOrgData.getGrantingOrgId());
         setFieldsInGrantingOrg(grantingOrg, grantingOrgData);
         return new GrantingOrgData(grantingOrgDao.save(grantingOrg));
+    }
+    
+    @Transactional(readOnly = false)
+    public void deleteGrantingOrg(Long grantingOrgId) {
+        GrantingOrg grantingOrg = findGrantingOrgById(grantingOrgId);
+        if (grantingOrg.getFinancialGrants().isEmpty()) {
+            grantingOrgDao.delete(grantingOrg);
+        } else {
+            throw new IllegalArgumentException("GrantingOrg with id " + grantingOrgId + " cannot be deleted because it has at least one grant associated with it.");
+        }
     }
     
     private GrantingOrg findOrCreateGrantingOrg(Long grantingOrgId) {
