@@ -52,17 +52,15 @@ public class DonationService {
     }
 
     @Transactional(readOnly = false)
-    public DonationData createDonation(Donation donation, Long donorIdValue) {
-        Donor donor = findDonorById(donorIdValue)
-        return saveDonationFromDonationData(new DonationData(donation), donor);
+    public DonationData createDonation(Donation donation) {
+        return saveDonationFromDonationData(new DonationData(donation));
     }
     
     @Transactional(readOnly = false)
-    public DonationData createDonation(Donation donation, Long donorIdValue, Long programIdValue) {
+    public DonationData createDonation(Donation donation, Long programIdValue) {
         DonationData donationData = new DonationData(donation);
-        Donor donor = findDonorById(donorIdValue);
         donationData.setPrograms(List.of(new DonationProgram(findProgramById(programIdValue))));
-        return saveDonationFromDonationData(donationData, donor);
+        return saveDonationFromDonationData(donationData);
     }
 
     @Transactional(readOnly = false)
@@ -79,12 +77,10 @@ public class DonationService {
     }
     
     @Transactional(readOnly = false)
-    private DonationData saveDonationFromDonationData(DonationData donationData, Donor donor) {
+    private DonationData saveDonationFromDonationData(DonationData donationData) {
         Long donationId = donationData.getDonationId();
         Donation donation = findOrCreateDonation(donationId);
         setFieldsInDonation(donation, donationData);
-        donor.getDonations().add(donation);
-        donorDao.save(donor);
         return new DonationData(donationDao.save(donation));
     }
     

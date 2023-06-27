@@ -51,13 +51,9 @@ public class DonationController {
     
     @PostMapping("/donation")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public DonationData createDonation(@RequestParam(required = true) Optional<Long> donorId, @RequestParam(required = false) Optional<Long> programId, @RequestBody Donation donation) {
-        if (donorId.isEmpty()){
-            log.warn("Donor ID is required.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Donor ID is required.");
-        }
+    public DonationData createDonation(@RequestParam(required = false) Optional<Long> programId, @RequestBody Donation donation) {
         log.info("Creating donation...");
-        return programId.isPresent() ? donationService.createDonation(donation, donorId.get(), programId.get()) : donationService.createDonation(donation, donorId.get());
+        return programId.isPresent() ? donationService.createDonation(donation, programId.get()) : donationService.createDonation(donation);
     }
     
     @GetMapping("/donation/{donationId}")
