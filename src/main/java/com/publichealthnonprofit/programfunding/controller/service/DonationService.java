@@ -53,7 +53,7 @@ public class DonationService {
 
     @Transactional(readOnly = false)
     public DonationData createDonation(Donation donation, Long donorIdValue) {
-        Donor donor = findDonorById(donorIdValue)
+        Donor donor = findDonorById(donorIdValue);
         return saveDonationFromDonationData(new DonationData(donation), donor);
     }
     
@@ -79,7 +79,7 @@ public class DonationService {
     }
     
     @Transactional(readOnly = false)
-    private DonationData saveDonationFromDonationData(DonationData donationData, Donor donor) {
+    public DonationData saveDonationFromDonationData(DonationData donationData, Donor donor) {
         Long donationId = donationData.getDonationId();
         Donation donation = findOrCreateDonation(donationId);
         setFieldsInDonation(donation, donationData);
@@ -99,7 +99,7 @@ public class DonationService {
     }
     
     @Transactional(readOnly = true)
-    private Donation findDonationById(Long donationId) {
+    public Donation findDonationById(Long donationId) {
         return donationDao.findById(donationId).orElseThrow(() -> new NoSuchElementException("Donation not found for id " + donationId));
     }
     

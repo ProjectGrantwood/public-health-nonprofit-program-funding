@@ -51,7 +51,7 @@ public class DonorService {
     }
     
     @Transactional(readOnly = false)
-    private DonorData saveDonorFromDonorData(DonorData donorData) {
+    public DonorData saveDonorFromDonorData(DonorData donorData) {
         Long donorId = donorData.getDonorId();
         Donor donor = findOrCreateDonor(donorId);
         setFieldsInDonor(donor, donorData);

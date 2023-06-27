@@ -3,8 +3,10 @@ package com.publichealthnonprofit.programfunding.controller.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,10 +62,32 @@ public class ProgramService {
         return filteredByDonor.stream().map(ProgramData::new).toList();
     }
     
+    @Transactional(readOnly = false)
     public ProgramData createProgram(Program program) {
+            /* We need to perform several checks: 
+            - Is the program name unique?
+            - Are the percentageBudget fields represented as decimals (e.g. 0.5 instead of 50)?
+            - Do the percentageBudget fields add up to 1.0?
+          */
+        String programName = program.getProgramName();
+        Optional<Boolean> programNameOptional = programDao.existsByProgramName(programName);
+        boolean programNameExists = programNameOptional.isPresent() && programNameOptional.get();
+        Float programBudgetPercentageGrantFunded = program.getProgramBudgetPercentageGrantFunded();
+        Float programBudgetPercentageDonationFunded = program.getProgramBudgetPercentageDonationFunded();
+        Float programBudgetPercentageTotal = programBudgetPercentageGrantFunded + programBudgetPercentageDonationFunded;
+        if (programNameExists) {
+            throw new DuplicateKeyException("Program name already exists");
+        } else if (programBudgetPercentageGrantFunded > 1.0 || programBudgetPercentageGrantFunded < 0.0) {
+            throw new IllegalArgumentException("Grant-funded percentage must be between 0.0 and 1.0");
+        } else if (programBudgetPercentageDonationFunded > 1.0 || programBudgetPercentageDonationFunded < 0.0) {
+            throw new IllegalArgumentException("Donation-funded percentage must be between 0.0 and 1.0");
+        } else if (programBudgetPercentageTotal != 1.0) {
+            throw new IllegalArgumentException("Grant-funded and donation-funded percentages must add up to 1.0");
+        }
         return saveProgramFromProgramData(new ProgramData(program));
     }
     
+    @Transactional(readOnly = true)
     public ProgramData getProgramById(Long programId) {
         return new ProgramData(findProgramById(programId));
     }
@@ -128,6 +152,9 @@ public class ProgramService {
     public ProgramData addFinancialGrant(Long programId, Long financialGrantIdValue) {
         Program program = findProgramById(programId);
         FinancialGrant financialGrant = findFinancialGrantById(financialGrantIdValue);
+        if (program.getFinancialGrants().contains(financialGrant)) {
+            throw new IllegalArgumentException("Financial grant is already associated with program");
+        }
         program.getFinancialGrants().add(financialGrant);
         return new ProgramData(programDao.save(program));
         
@@ -137,6 +164,9 @@ public class ProgramService {
     public ProgramData addDonation(Long programId, Long donationIdValue) {
         Program program = findProgramById(programId);
         Donation donation = findDonationById(donationIdValue);
+        if (program.getDonations().contains(donation)) {
+            throw new IllegalArgumentException("Donation is already associated with program");
+        }
         program.getDonations().add(donation);
         return new ProgramData(programDao.save(program));
     }

@@ -4,6 +4,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.NoSuchElementException;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -54,6 +55,12 @@ public class ProgramFundingGlobalErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionMessage handleIllegalArgumentException(IllegalArgumentException exception, WebRequest webRequest) {
         return buildExceptionMessage(exception, HttpStatus.BAD_REQUEST, webRequest, LogStatus.MESSAGE_ONLY);
+    }
+    
+    @ExceptionHandler(DuplicateKeyException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ExceptionMessage handleDuplicateKeyException(DuplicateKeyException exception, WebRequest webRequest) {
+        return buildExceptionMessage(exception, HttpStatus.CONFLICT, webRequest, LogStatus.MESSAGE_ONLY);
     }
 
     private ExceptionMessage buildExceptionMessage(Exception exception, HttpStatus httpStatus, WebRequest webRequest, LogStatus logStatus) {

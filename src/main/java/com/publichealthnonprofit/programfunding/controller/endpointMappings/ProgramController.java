@@ -40,10 +40,10 @@ public class ProgramController {
         @RequestParam(required = false) Optional<Long> financialGrantId
     ) {
         
-        // We need to check if more than one of the query parameters is present. If so, we need to throw an error.
-        // We don't care which ones are present, just that the total is less than or equal to 1.
-        // The DRYest way to do this is to put them in an array, loop through it counting the numbe of true values, 
-        // and throw an error directly in the loop body if the count is ever greater than 1.
+        /* We need to check if more than one of the query parameters is present. If so, we need to throw an error.
+         We don't care which ones are present, just that the total number of them is less than or equal to 1.
+         The DRYest way to do this is to put them in an array, loop through it counting the numbe of true values, 
+         and throw an error directly in the loop body if the count is ever greater than 1. */
         
         boolean[] queryParamPresent = {donorId.isPresent(), grantingOrgId.isPresent(), donationId.isPresent(), financialGrantId.isPresent()};
         int trueCount = 0;
@@ -57,8 +57,8 @@ public class ProgramController {
             }
         }
         
-        // Since we already have the presence of each query parameter stored in an array,
-        // we'll just reference the array instead of calling isPresent() again.
+        /* Since we already have the presence of each query parameter stored in an array,
+        we'll just reference the array instead of calling isPresent() again. */
         
         if (queryParamPresent[0]) {
             Long donorIdValue = donorId.get();

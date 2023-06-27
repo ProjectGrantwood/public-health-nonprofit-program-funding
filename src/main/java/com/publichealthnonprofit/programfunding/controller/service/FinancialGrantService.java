@@ -65,6 +65,7 @@ public class FinancialGrantService {
         return saveFinancialGrantFromFinancialGrantData(financialGrantData, grantingOrg);
     }
 
+    @Transactional(readOnly = true)
     public FinancialGrantData getFinancialGrantById(Long financialGrantId) {
         return new FinancialGrantData(findFinancialGrantById(financialGrantId));
     }
@@ -77,7 +78,7 @@ public class FinancialGrantService {
     }
     
     @Transactional(readOnly = false)
-    private FinancialGrantData saveFinancialGrantFromFinancialGrantData(FinancialGrantData financialGrantData, GrantingOrg grantingOrg) {
+    public FinancialGrantData saveFinancialGrantFromFinancialGrantData(FinancialGrantData financialGrantData, GrantingOrg grantingOrg) {
         Long financialGrantId = financialGrantData.getFinancialGrantId();
         FinancialGrant financialGrant = findOrCreateFinancialGrant(financialGrantId);
         setFieldsInFinancialGrant(financialGrant, financialGrantData);
@@ -101,7 +102,8 @@ public class FinancialGrantService {
         return financialGrantDao.findById(financialGrantId).orElseThrow(() -> new NoSuchElementException("FinancialGrant not found for id " + financialGrantId));
     }
     
-    private void setFieldsInFinancialGrant(FinancialGrant financialGrant, FinancialGrantData financialGrantData) {
+    @Transactional(readOnly = true)
+    public void setFieldsInFinancialGrant(FinancialGrant financialGrant, FinancialGrantData financialGrantData) {
         financialGrant.setGrantingOrg(findGrantingOrgById(financialGrantData.getGrantingOrg().getGrantingOrgId()));
         Set<Program> programs = new HashSet<>();
         List<FinancialGrantProgram> financialGrantPrograms = financialGrantData.getPrograms();
