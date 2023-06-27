@@ -1,17 +1,43 @@
-# public-health-nonprofit-program-funding
-Final Project for the Promineo Tech Backend Bootcamp
 
-## Brief Description:
+# Public Health Nonprofit Program Funding
 
-This repository contains all process documents, code, and documentation for my final project as part of Promineo Tech's Feb. 2023 Backend Developer cohort. The goal of the project was to create a MySQL database and corresponding API endpoints with fully implemented CRUD operations. It is coded primarily in Java using the Spring Boot framework, and I used Gradle as the build-tool.
+A MySQL database & API developed in under two weeks using Spring Boot
 
-The database architecture is meant to reflect organizational tracking of funding sources for a fictional nonprofit focusing on Public Health. I came up with this idea in consultation with my endlessly loving, hard-working, beautiful wife Liz, who is a program manager for a public health nonprofit (...when she's not working overnight as a bedside nurse). This project, not to mention my career as a developer, would not exist without her support.
+## Brief Description:  
 
-**For more information on the project details, please refer to the proposal document located in the** _src/main/resources/static_ **folder!**
+This repository contains all process documents, code, and documentation for my final project as part of Promineo Tech's Feb. 2023 Backend Developer Cohort. The goal of the project was to create a MySQL database and corresponding API endpoints with fully implemented CRUD operations. The database architecture is meant to reflect organizational tracking of funding sources for a fictional nonprofit focusing on public health.  
 
-## Where the project and the proposal differ:
+    For more information on the project details, please refer to the proposal document located in src/main/resources/static!
 
-The proposal document was written before I had a chance to really dig into the code and the database design. As a result, there are a few differences between the proposal and the final product. I will list them here:
+*I came up with this idea in consultation with my endlessly loving, hard-working, beautiful wife Liz, who is a program manager for a public health nonprofit (...when she's not working overnight as a bedside nurse, or being called "Mom"). This project, not to mention my career as a developer, would not exist without her support.*
 
-1. The proposal lists a "grant" table, as well as an associated endpoint. Of course, ```GRANT``` is a keyword in MySQL, so this was a no-go. I changed the word to ```FinancialGrant``` or any number of appropriate variations throughout the code as well as the database.
-2. PUT requests to both the ```FinancialGrant``` and ```Donation``` endpoints were both proposed to accept an extra optional JSON field called "programAllotments", which was intended to allow the user to specify how much of the grant or donation was to be allocated to each program. I realized this would require writing a custom deserializer, which is much easier to do when using the Spring Framework by itself, while this project was created with Spring Boot. I decided to leave this feature out for now, and removed the two extra columns from the ```FinancialGrant``` and ```Donation``` tables. I look forward to future database projects using Spring Framework, where it would be easier to implement custom behaviors for features like this.
+---
+
+## Technologies used
+
+- Java
+- Gradle
+- Spring Boot
+- DBeaver
+- Advanced Rest Client
+- MySQL Workbench
+
+---
+
+## Where the final project and the proposal differ
+
+### *```Grant``` is now ```FinancialGrant```*
+
+   The proposal lists a "grant" table, as well as an associated endpoint. Seeing as ```GRANT``` is a keyword in MySQL, actually using this as a name for a table resulted in major errors. I changed the word to ```FinancialGrant``` or any number of appropriate variations throughout the project.
+
+### *Requests cannot expect extra JSON fields*  
+
+   ```PUT``` requests to both the ```FinancialGrant``` and ```Donation``` endpoints were both proposed to accept an extra optional JSON field called ```programAllotments```, which was intended to allow the user to specify how much of the grant or donation was to be allocated to each program. This would have required writing a custom deserializer, a task better suited to applications developed with Spring Framework instead of Spring Boot. This was how I learned that Spring Boot is good for quick development of straightforward applications, but not so great if complex behaviors are needed.
+
+### *Required query parameters added for ```POST```*
+
+   When sending a ```POST``` request that creates a new Donation or new Grant, there is now a required query parameter specifying a Donor ID or Granting Organization ID, respectively. Otherwise there was no behavior in any of the existing requests that would actually create this association.  
+
+### *Optional query parameters added for ```PUT```*  
+
+When including a Grant ID or Donation ID (but not both) as a query string parameter in ```PUT``` requests to ```/program/programId```, the associated Grant or Donation (if it exists) is associated with that program in the database.  
