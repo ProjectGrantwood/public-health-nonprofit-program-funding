@@ -140,7 +140,6 @@ public class DonationService {
         DonationDonor updatedDonor = donationData.getDonor();
         Date updatedDonationDate = donationData.getDonationDate();
         Float updatedDonationAmount = donationData.getDonationAmount();
-        // List<DonationProgram> donationPrograms = donationData.getPrograms();
         if (Objects.nonNull(updatedDonor)) {
             donation.setDonor(findDonorById(updatedDonor.getDonorId()));
         }
@@ -150,17 +149,6 @@ public class DonationService {
         if (Objects.nonNull(updatedDonationAmount)) {
             donation.setDonationAmount(updatedDonationAmount);
         }
-        // if (Objects.nonNull(donationPrograms)) {
-        //     Set<Program> programs = new HashSet<>();
-        //     for (DonationProgram donationProgram : donationPrograms) {
-        //         Program program = findProgramById(donationProgram.getProgramId());
-        //         if (!donation.getPrograms().contains(program)) {
-        //             programs.add(program);
-        //         }
-        //     }
-        //     donation.setPrograms(programs);
-        // }
-        
     }
     
     @Transactional(readOnly = true)

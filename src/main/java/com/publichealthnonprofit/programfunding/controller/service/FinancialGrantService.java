@@ -146,7 +146,6 @@ public class FinancialGrantService {
         Float updatedFinancialGrantAmount = financialGrantData.getFinancialGrantAmount();
         Date updatedFinancialGrantStartDate = financialGrantData.getFinancialGrantStartDate();
         Date updatedFinancialGrantEndDate = financialGrantData.getFinancialGrantEndDate();
-        List<FinancialGrantProgram> updatedFinancialGrantPrograms = financialGrantData.getPrograms();
         if (Objects.nonNull(updatedGrantingOrg)) {
             financialGrant.setGrantingOrg(findGrantingOrgById(updatedGrantingOrg.getGrantingOrgId()));
         }
@@ -161,16 +160,6 @@ public class FinancialGrantService {
         }
         if (Objects.nonNull(updatedFinancialGrantEndDate)) {
             financialGrant.setFinancialGrantEndDate(updatedFinancialGrantEndDate);
-        }
-        if (Objects.nonNull(updatedFinancialGrantPrograms)) {
-            Set<Program> programs = new HashSet<>();
-            for (FinancialGrantProgram financialGrantProgram : updatedFinancialGrantPrograms) {
-               Program program = findProgramById(financialGrantProgram.getProgramId());
-               if (!financialGrant.getPrograms().contains(program)) {
-                   programs.add(program);
-               }
-            }
-            financialGrant.setPrograms(programs);
         }
     }
     
