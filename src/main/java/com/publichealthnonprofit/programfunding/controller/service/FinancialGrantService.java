@@ -37,7 +37,6 @@ public class FinancialGrantService {
     public List<FinancialGrantData> getAllFinancialGrantsByGrantingOrgId(Long grantingOrgIdValue) {
         List<FinancialGrantData> allFinancialGrants = getAllFinancialGrants();
         return allFinancialGrants.stream().filter(financialGrant -> financialGrant.getGrantingOrg().getGrantingOrgId().equals(grantingOrgIdValue)).toList();
-        
     }
 
     @Transactional(readOnly = true)
@@ -62,29 +61,68 @@ public class FinancialGrantService {
     public FinancialGrantData createFinancialGrant(FinancialGrant financialGrant, Long grantingOrgIdValue, Long programIdValue) {
         GrantingOrg grantingOrg = findGrantingOrgById(grantingOrgIdValue);
         financialGrant.setGrantingOrg(grantingOrg);
-        FinancialGrantData financialGrantData = new FinancialGrantData(financialGrant);
-        financialGrantData.setPrograms(List.of(new FinancialGrantProgram(findProgramById(programIdValue))));
-        return saveFinancialGrantFromFinancialGrantData(financialGrantData);
+        return saveFinancialGrantFromFinancialGrantData(new FinancialGrantData(financialGrant), programIdValue);
     }
-
-    @Transactional(readOnly = true)
-    public FinancialGrantData getFinancialGrantById(Long financialGrantId) {
-        return new FinancialGrantData(findFinancialGrantById(financialGrantId));
+    
+    private FinancialGrantData saveFinancialGrantFromFinancialGrantData(FinancialGrantData financialGrantData) {
+        Long financialGrantId = financialGrantData.getFinancialGrantId();
+        FinancialGrant financialGrant = findOrCreateFinancialGrant(financialGrantId);
+        setFieldsInFinancialGrant(financialGrant, financialGrantData);
+        return new FinancialGrantData(financialGrantDao.save(financialGrant));
     }
-
+    
+    @Transactional(readOnly = false)
+    public FinancialGrantData saveFinancialGrantFromFinancialGrantData(FinancialGrantData financialGrantData, Long programIdValue) {
+        Long financialGrantId = financialGrantData.getFinancialGrantId();
+        FinancialGrant financialGrant = findOrCreateFinancialGrant(financialGrantId);
+        setFieldsInFinancialGrant(financialGrant, financialGrantData, programIdValue);
+        return new FinancialGrantData(financialGrantDao.save(financialGrant));
+    }
+    
+    private void setFieldsInFinancialGrant(FinancialGrant financialGrant, FinancialGrantData financialGrantData) {
+        financialGrant.setGrantingOrg(findGrantingOrgById(financialGrantData.getGrantingOrg().getGrantingOrgId()));
+        Set<Program> programs = new HashSet<>();
+        List<FinancialGrantProgram> financialGrantPrograms = financialGrantData.getPrograms();
+        for (FinancialGrantProgram financialGrantProgram : financialGrantPrograms) {
+            programs.add(findProgramById(financialGrantProgram.getProgramId()));
+        }
+        financialGrant.setPrograms(programs);
+        financialGrant.setFinancialGrantName(financialGrantData.getFinancialGrantName());
+        financialGrant.setFinancialGrantAmount(financialGrantData.getFinancialGrantAmount());
+        financialGrant.setFinancialGrantStartDate(financialGrantData.getFinancialGrantStartDate());
+        financialGrant.setFinancialGrantEndDate(financialGrantData.getFinancialGrantEndDate());
+    }
+    
+        private void setFieldsInFinancialGrant(FinancialGrant financialGrant, FinancialGrantData financialGrantData, Long programIdValue) {
+        financialGrant.setGrantingOrg(findGrantingOrgById(financialGrantData.getGrantingOrg().getGrantingOrgId()));
+        Set<Program> programs = new HashSet<>();
+        List<FinancialGrantProgram> financialGrantPrograms = financialGrantData.getPrograms();
+        for (FinancialGrantProgram financialGrantProgram : financialGrantPrograms) {
+            programs.add(findProgramById(financialGrantProgram.getProgramId()));
+        }
+        Program program = findProgramById(programIdValue);
+        programs.add(program);
+        financialGrant.setPrograms(programs);
+        financialGrant.setFinancialGrantName(financialGrantData.getFinancialGrantName());
+        financialGrant.setFinancialGrantAmount(financialGrantData.getFinancialGrantAmount());
+        financialGrant.setFinancialGrantStartDate(financialGrantData.getFinancialGrantStartDate());
+        financialGrant.setFinancialGrantEndDate(financialGrantData.getFinancialGrantEndDate());
+        Set<FinancialGrant> programFinancialGrants = program.getFinancialGrants();
+        programFinancialGrants.add(financialGrant);
+        program.setFinancialGrants(programFinancialGrants);
+    }
+    
+    
     @Transactional(readOnly = false)
     public FinancialGrantData updateFinancialGrant(Long financialGrantId, FinancialGrant financialGrant) {
         FinancialGrant financialGrantToUpdate = findFinancialGrantById(financialGrantId);
         setUpdatedFieldsInFinancialGrant(financialGrantToUpdate, new FinancialGrantData(financialGrant));
         return new FinancialGrantData(financialGrantDao.save(financialGrantToUpdate));
     }
-    
-    @Transactional(readOnly = false)
-    public FinancialGrantData saveFinancialGrantFromFinancialGrantData(FinancialGrantData financialGrantData) {
-        Long financialGrantId = financialGrantData.getFinancialGrantId();
-        FinancialGrant financialGrant = findOrCreateFinancialGrant(financialGrantId);
-        setFieldsInFinancialGrant(financialGrant, financialGrantData);
-        return new FinancialGrantData(financialGrantDao.save(financialGrant));
+
+    @Transactional(readOnly = true)
+    public FinancialGrantData getFinancialGrantById(Long financialGrantId) {
+        return new FinancialGrantData(findFinancialGrantById(financialGrantId));
     }
     
     private FinancialGrant findOrCreateFinancialGrant(Long financialGrantId){
@@ -100,21 +138,6 @@ public class FinancialGrantService {
     @Transactional(readOnly = true)
     public FinancialGrant findFinancialGrantById(Long financialGrantId) {
         return financialGrantDao.findById(financialGrantId).orElseThrow(() -> new NoSuchElementException("FinancialGrant not found for id " + financialGrantId));
-    }
-    
-    @Transactional(readOnly = true)
-    public void setFieldsInFinancialGrant(FinancialGrant financialGrant, FinancialGrantData financialGrantData) {
-        financialGrant.setGrantingOrg(findGrantingOrgById(financialGrantData.getGrantingOrg().getGrantingOrgId()));
-        Set<Program> programs = new HashSet<>();
-        List<FinancialGrantProgram> financialGrantPrograms = financialGrantData.getPrograms();
-        for (FinancialGrantProgram financialGrantProgram : financialGrantPrograms) {
-            programs.add(findProgramById(financialGrantProgram.getProgramId()));
-        }
-        financialGrant.setPrograms(programs);
-        financialGrant.setFinancialGrantName(financialGrantData.getFinancialGrantName());
-        financialGrant.setFinancialGrantAmount(financialGrantData.getFinancialGrantAmount());
-        financialGrant.setFinancialGrantStartDate(financialGrantData.getFinancialGrantStartDate());
-        financialGrant.setFinancialGrantEndDate(financialGrantData.getFinancialGrantEndDate());
     }
     
     private void setUpdatedFieldsInFinancialGrant(FinancialGrant financialGrant, FinancialGrantData financialGrantData) {
@@ -166,7 +189,7 @@ public class FinancialGrantService {
         if (financialGrantDao.existsById(financialGrantId)) {
             financialGrantDao.deleteById(financialGrantId);
         } else {
-            throw new NoSuchElementException("FinancialGrant not found for id " + financialGrantId);
+            throw new NoSuchElementException("Grant not found for id " + financialGrantId);
         }
     }
     

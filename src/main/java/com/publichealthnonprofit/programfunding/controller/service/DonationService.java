@@ -43,7 +43,6 @@ public class DonationService {
     public List<DonationData> getAllDonationsByProgramId(Long programIdValue) {
         List<DonationData> allDonations = getAllDonations();
         return allDonations.stream().filter(donation -> donation.getPrograms().stream().anyMatch(program -> program.getProgramId().equals(programIdValue))).toList();
-        
     }
 
     @Transactional(readOnly = true)
@@ -58,10 +57,25 @@ public class DonationService {
         return saveDonationFromDonationData(new DonationData(donation));
     }
     
+    @Transactional(readOnly = false)
+    public DonationData createDonation(Donation donation, Long donorIdValue, Long programIdValue) {
+        Donor donor = findDonorById(donorIdValue);
+        donation.setDonor(donor);
+        return saveDonationFromDonationData(new DonationData(donation), programIdValue);
+    }
+    
     private DonationData saveDonationFromDonationData(DonationData donationData) {
         Long donationId = donationData.getDonationId();
         Donation donation = findOrCreateDonation(donationId);
         setFieldsInDonation(donation, donationData);
+        return new DonationData(donationDao.save(donation));
+    }
+    
+    @Transactional(readOnly = false)
+    public DonationData saveDonationFromDonationData(DonationData donationData, Long programIdValue) {
+        Long donationId = donationData.getDonationId();
+        Donation donation = findOrCreateDonation(donationId);
+        setFieldsInDonation(donation, donationData, programIdValue);
         return new DonationData(donationDao.save(donation));
     }
 
@@ -75,49 +89,6 @@ public class DonationService {
         donation.setPrograms(programs);
         donation.setDonationAmount(donationData.getDonationAmount());
         donation.setDonationDate(donationData.getDonationDate());
-    }
-
-    @Transactional(readOnly = false)
-    public DonationData createDonation(Donation donation, Long donorIdValue, Long programIdValue) {
-        Donor donor = findDonorById(donorIdValue);
-        donation.setDonor(donor);
-        return saveDonationFromDonationData(new DonationData(donation), programIdValue);
-    }
-
-    @Transactional(readOnly = false)
-    public DonationData updateDonation(Long donationId, Donation donation) {
-        Donation donationToUpdate = findDonationById(donationId);
-        setUpdatedFieldsInDonation(donationToUpdate, new DonationData(donation));
-        return new DonationData(donationDao.save(donationToUpdate));
-        
-    }
-
-    @Transactional(readOnly = true)
-    public DonationData getDonationById(Long donationId) {
-        return new DonationData(findDonationById(donationId));
-    }
-    
-    @Transactional(readOnly = false)
-    public DonationData saveDonationFromDonationData(DonationData donationData, Long programIdValue) {
-        Long donationId = donationData.getDonationId();
-        Donation donation = findOrCreateDonation(donationId);
-        setFieldsInDonation(donation, donationData, programIdValue);
-        return new DonationData(donationDao.save(donation));
-    }
-    
-    private Donation findOrCreateDonation(Long donationId) {
-        Donation donation;
-        if (Objects.isNull(donationId)) {
-            donation = new Donation();
-        } else {
-            donation = findDonationById(donationId);
-        }
-        return donation;
-    }
-    
-    @Transactional(readOnly = true)
-    public Donation findDonationById(Long donationId) {
-        return donationDao.findById(donationId).orElseThrow(() -> new NoSuchElementException("Donation not found for id " + donationId));
     }
     
     private void setFieldsInDonation(Donation donation, DonationData donationData, Long programIdValue) {
@@ -135,6 +106,34 @@ public class DonationService {
         Set<Donation> programDonations = program.getDonations();
         programDonations.add(donation);
         program.setDonations(programDonations);
+    }
+
+    @Transactional(readOnly = false)
+    public DonationData updateDonation(Long donationId, Donation donation) {
+        Donation donationToUpdate = findDonationById(donationId);
+        setUpdatedFieldsInDonation(donationToUpdate, new DonationData(donation));
+        return new DonationData(donationDao.save(donationToUpdate));
+        
+    }
+
+    @Transactional(readOnly = true)
+    public DonationData getDonationById(Long donationId) {
+        return new DonationData(findDonationById(donationId));
+    }
+    
+    private Donation findOrCreateDonation(Long donationId) {
+        Donation donation;
+        if (Objects.isNull(donationId)) {
+            donation = new Donation();
+        } else {
+            donation = findDonationById(donationId);
+        }
+        return donation;
+    }
+    
+    @Transactional(readOnly = true)
+    public Donation findDonationById(Long donationId) {
+        return donationDao.findById(donationId).orElseThrow(() -> new NoSuchElementException("Donation not found for id " + donationId));
     }
     
     private void setUpdatedFieldsInDonation(Donation donation, DonationData donationData) {
