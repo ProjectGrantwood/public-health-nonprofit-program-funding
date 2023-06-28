@@ -1,4 +1,4 @@
-package com.publichealthnonprofit.programfunding.controller.endpointMappings;
+package com.publichealthnonprofit.programfunding.controller.endpointmappings;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
