@@ -54,15 +54,17 @@ public class FinancialGrantService {
     @Transactional(readOnly = false)
     public FinancialGrantData createFinancialGrant(FinancialGrant financialGrant, Long grantingOrgIdValue) {
         GrantingOrg grantingOrg = findGrantingOrgById(grantingOrgIdValue);
-        return saveFinancialGrantFromFinancialGrantData(new FinancialGrantData(financialGrant), grantingOrg);
+        financialGrant.setGrantingOrg(grantingOrg);
+        return saveFinancialGrantFromFinancialGrantData(new FinancialGrantData(financialGrant));
     }
 
     @Transactional(readOnly = false)
     public FinancialGrantData createFinancialGrant(FinancialGrant financialGrant, Long grantingOrgIdValue, Long programIdValue) {
-        FinancialGrantData financialGrantData = new FinancialGrantData(financialGrant);
         GrantingOrg grantingOrg = findGrantingOrgById(grantingOrgIdValue);
+        financialGrant.setGrantingOrg(grantingOrg);
+        FinancialGrantData financialGrantData = new FinancialGrantData(financialGrant);
         financialGrantData.setPrograms(List.of(new FinancialGrantProgram(findProgramById(programIdValue))));
-        return saveFinancialGrantFromFinancialGrantData(financialGrantData, grantingOrg);
+        return saveFinancialGrantFromFinancialGrantData(financialGrantData);
     }
 
     @Transactional(readOnly = true)
@@ -78,12 +80,10 @@ public class FinancialGrantService {
     }
     
     @Transactional(readOnly = false)
-    public FinancialGrantData saveFinancialGrantFromFinancialGrantData(FinancialGrantData financialGrantData, GrantingOrg grantingOrg) {
+    public FinancialGrantData saveFinancialGrantFromFinancialGrantData(FinancialGrantData financialGrantData) {
         Long financialGrantId = financialGrantData.getFinancialGrantId();
         FinancialGrant financialGrant = findOrCreateFinancialGrant(financialGrantId);
         setFieldsInFinancialGrant(financialGrant, financialGrantData);
-        grantingOrg.getFinancialGrants().add(financialGrant);
-        grantingOrgDao.save(grantingOrg);
         return new FinancialGrantData(financialGrantDao.save(financialGrant));
     }
     

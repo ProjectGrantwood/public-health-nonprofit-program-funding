@@ -1,10 +1,7 @@
 package com.publichealthnonprofit.programfunding.controller.model;
 
 import java.sql.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import com.publichealthnonprofit.programfunding.entity.Donation;
 import com.publichealthnonprofit.programfunding.entity.Donor;
 import com.publichealthnonprofit.programfunding.entity.Program;
@@ -19,9 +16,6 @@ public class DonationData {
     private Date donationDate;
     private DonationDonor donor;
     private List<DonationProgram> programs;
-    
-    // Only used for Put Mappings.
-    private Map<Long, Double> programAllotments = new HashMap<>();
     
     public DonationData(Donation donation){
         this.donationId = donation.getDonationId();

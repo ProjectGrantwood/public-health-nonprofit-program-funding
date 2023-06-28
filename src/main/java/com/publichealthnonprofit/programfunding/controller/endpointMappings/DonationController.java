@@ -23,7 +23,7 @@ import com.publichealthnonprofit.programfunding.entity.Donation;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/program-funding")
+@RequestMapping("/program_funding")
 @Slf4j
 public class DonationController {
     
