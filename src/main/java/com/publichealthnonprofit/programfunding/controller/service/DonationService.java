@@ -58,13 +58,30 @@ public class DonationService {
         return saveDonationFromDonationData(new DonationData(donation));
     }
     
+    private DonationData saveDonationFromDonationData(DonationData donationData) {
+        Long donationId = donationData.getDonationId();
+        Donation donation = findOrCreateDonation(donationId);
+        setFieldsInDonation(donation, donationData);
+        return new DonationData(donationDao.save(donation));
+    }
+
+    private void setFieldsInDonation(Donation donation, DonationData donationData) {
+        donation.setDonor(findDonorById(donationData.getDonor().getDonorId()));
+        Set<Program> programs = new HashSet<>();
+        List<DonationProgram> donationPrograms = donationData.getPrograms();
+        for (DonationProgram donationProgram : donationPrograms) {
+            programs.add(findProgramById(donationProgram.getProgramId()));
+        }
+        donation.setPrograms(programs);
+        donation.setDonationAmount(donationData.getDonationAmount());
+        donation.setDonationDate(donationData.getDonationDate());
+    }
+
     @Transactional(readOnly = false)
     public DonationData createDonation(Donation donation, Long donorIdValue, Long programIdValue) {
         Donor donor = findDonorById(donorIdValue);
         donation.setDonor(donor);
-        DonationData donationData = new DonationData(donation);
-        donationData.setPrograms(List.of(new DonationProgram(findProgramById(programIdValue))));
-        return saveDonationFromDonationData(donationData);
+        return saveDonationFromDonationData(new DonationData(donation), programIdValue);
     }
 
     @Transactional(readOnly = false)
@@ -81,10 +98,10 @@ public class DonationService {
     }
     
     @Transactional(readOnly = false)
-    public DonationData saveDonationFromDonationData(DonationData donationData) {
+    public DonationData saveDonationFromDonationData(DonationData donationData, Long programIdValue) {
         Long donationId = donationData.getDonationId();
         Donation donation = findOrCreateDonation(donationId);
-        setFieldsInDonation(donation, donationData);
+        setFieldsInDonation(donation, donationData, programIdValue);
         return new DonationData(donationDao.save(donation));
     }
     
@@ -103,23 +120,28 @@ public class DonationService {
         return donationDao.findById(donationId).orElseThrow(() -> new NoSuchElementException("Donation not found for id " + donationId));
     }
     
-    private void setFieldsInDonation(Donation donation, DonationData donationData) {
+    private void setFieldsInDonation(Donation donation, DonationData donationData, Long programIdValue) {
         donation.setDonor(findDonorById(donationData.getDonor().getDonorId()));
         Set<Program> programs = new HashSet<>();
         List<DonationProgram> donationPrograms = donationData.getPrograms();
         for (DonationProgram donationProgram : donationPrograms) {
             programs.add(findProgramById(donationProgram.getProgramId()));
         }
+        Program program = findProgramById(programIdValue);
+        programs.add(program);
         donation.setPrograms(programs);
         donation.setDonationAmount(donationData.getDonationAmount());
         donation.setDonationDate(donationData.getDonationDate());
+        Set<Donation> programDonations = program.getDonations();
+        programDonations.add(donation);
+        program.setDonations(programDonations);
     }
     
     private void setUpdatedFieldsInDonation(Donation donation, DonationData donationData) {
         DonationDonor updatedDonor = donationData.getDonor();
         Date updatedDonationDate = donationData.getDonationDate();
         Float updatedDonationAmount = donationData.getDonationAmount();
-        List<DonationProgram> donationPrograms = donationData.getPrograms();
+        // List<DonationProgram> donationPrograms = donationData.getPrograms();
         if (Objects.nonNull(updatedDonor)) {
             donation.setDonor(findDonorById(updatedDonor.getDonorId()));
         }
@@ -129,16 +151,16 @@ public class DonationService {
         if (Objects.nonNull(updatedDonationAmount)) {
             donation.setDonationAmount(updatedDonationAmount);
         }
-        if (Objects.nonNull(donationPrograms)) {
-            Set<Program> programs = new HashSet<>();
-            for (DonationProgram donationProgram : donationPrograms) {
-                Program program = findProgramById(donationProgram.getProgramId());
-                if (!donation.getPrograms().contains(program)) {
-                    programs.add(program);
-                }
-            }
-            donation.setPrograms(programs);
-        }
+        // if (Objects.nonNull(donationPrograms)) {
+        //     Set<Program> programs = new HashSet<>();
+        //     for (DonationProgram donationProgram : donationPrograms) {
+        //         Program program = findProgramById(donationProgram.getProgramId());
+        //         if (!donation.getPrograms().contains(program)) {
+        //             programs.add(program);
+        //         }
+        //     }
+        //     donation.setPrograms(programs);
+        // }
         
     }
     
