@@ -5,9 +5,11 @@ import java.util.List;
 import com.publichealthnonprofit.programfunding.entity.Donation;
 import com.publichealthnonprofit.programfunding.entity.Donor;
 import com.publichealthnonprofit.programfunding.entity.Program;
+
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+@Hidden
 @Data
 @NoArgsConstructor
 public class DonationData {
@@ -25,6 +27,7 @@ public class DonationData {
         this.programs = donation.getPrograms().stream().map(DonationProgram::new).toList();
     }
     
+    @Hidden
     @Data
     @NoArgsConstructor
     public static class DonationDonor {

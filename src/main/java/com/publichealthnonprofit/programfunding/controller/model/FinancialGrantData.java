@@ -5,11 +5,15 @@ import java.util.List;
 import com.publichealthnonprofit.programfunding.entity.FinancialGrant;
 import com.publichealthnonprofit.programfunding.entity.GrantingOrg;
 import com.publichealthnonprofit.programfunding.entity.GrantingOrg.GrantingOrgType;
+
+import io.swagger.v3.oas.annotations.Hidden;
+
 import com.publichealthnonprofit.programfunding.entity.Program;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Hidden
 @Data
 @NoArgsConstructor
 public class FinancialGrantData {
@@ -32,6 +36,7 @@ public class FinancialGrantData {
         this.programs = financialGrant.getPrograms().stream().map(FinancialGrantProgram::new).toList();
     }
     
+    @Hidden
     @Data
     @NoArgsConstructor
     public static class FinancialGrantGrantingOrg {

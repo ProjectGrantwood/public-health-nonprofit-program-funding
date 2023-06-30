@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ResponseStatusException;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+@Hidden
 @RestControllerAdvice
 @Slf4j
 public class ProgramFundingGlobalErrorHandler {
@@ -61,6 +64,12 @@ public class ProgramFundingGlobalErrorHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionMessage handleDuplicateKeyException(DuplicateKeyException exception, WebRequest webRequest) {
         return buildExceptionMessage(exception, HttpStatus.CONFLICT, webRequest, LogStatus.MESSAGE_ONLY);
+    }
+    
+    @ExceptionHandler(ResponseStatusException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionMessage handleResponseStatusException(ResponseStatusException exception, WebRequest webRequest) {
+        return buildExceptionMessage(exception, HttpStatus.BAD_REQUEST, webRequest, LogStatus.MESSAGE_ONLY);
     }
 
     private ExceptionMessage buildExceptionMessage(Exception exception, HttpStatus httpStatus, WebRequest webRequest, LogStatus logStatus) {

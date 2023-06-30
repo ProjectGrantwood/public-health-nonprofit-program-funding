@@ -7,9 +7,11 @@ import com.publichealthnonprofit.programfunding.entity.FinancialGrant;
 import com.publichealthnonprofit.programfunding.entity.GrantingOrg;
 import com.publichealthnonprofit.programfunding.entity.GrantingOrg.GrantingOrgType;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Hidden
 @Data
 @NoArgsConstructor
 public class GrantingOrgData {
@@ -31,6 +33,7 @@ public class GrantingOrgData {
         this.financialGrants = grantingOrg.getFinancialGrants().stream().map(GrantingOrgFinancialGrant::new).toList();
     }
     
+    @Hidden
     @Data
     @NoArgsConstructor
     public static class GrantingOrgFinancialGrant {

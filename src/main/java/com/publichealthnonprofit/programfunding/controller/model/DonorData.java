@@ -7,9 +7,11 @@ import com.publichealthnonprofit.programfunding.controller.model.DonationData.Do
 import com.publichealthnonprofit.programfunding.entity.Donation;
 import com.publichealthnonprofit.programfunding.entity.Donor;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Hidden
 @Data
 @NoArgsConstructor
 public class DonorData {
@@ -37,6 +39,7 @@ public class DonorData {
         this.donations = donor.getDonations().stream().map(DonorDonation::new).toList();
     }
     
+    @Hidden
     @Data
     @NoArgsConstructor
     public static class DonorDonation {
