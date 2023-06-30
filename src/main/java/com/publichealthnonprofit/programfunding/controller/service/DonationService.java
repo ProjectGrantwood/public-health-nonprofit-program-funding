@@ -161,4 +161,13 @@ public class DonationService {
         return donorDao.findById(donorId).orElseThrow(() -> new NoSuchElementException("Donor not found for id " + donorId));
     }
     
+    @Transactional(readOnly = false)
+    public void deleteDonationById(Long donationId) {
+        if (donationDao.existsById(donationId)) {
+            donationDao.deleteById(donationId);
+        } else {
+            throw new NoSuchElementException("Donation not found for id " + donationId);
+        }
+    }
+    
 }
