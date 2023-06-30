@@ -3,11 +3,11 @@
 
 A MySQL database & API developed in under two weeks using Spring Boot
 
-## Brief Description:  
+## Brief Description  
 
-This repository contains all process documents, code, and documentation for my final project as part of Promineo Tech's Feb. 2023 Backend Developer Cohort. The goal of the project was to create a MySQL database and corresponding API endpoints with fully implemented CRUD operations. The database architecture is meant to reflect organizational tracking of funding sources for a fictional nonprofit focusing on public health.  
+This repository contains all process documents, code, and documentation for my final project as part of [Promineo Tech's](http://www.promineotech.com) Feb. 2023 Backend Developer Cohort. The goal of the project was to create a MySQL database and corresponding API endpoints with fully implemented CRUD operations. The database architecture is meant to reflect organizational tracking of funding sources for a fictional nonprofit focusing on public health.  
 
-    For more information on the project details, please refer to the proposal document located in src/main/resources/static!
+For more information on the project details, please refer to the proposal document located [here](http://www.github.com/ProjectGrantwood/public-health-nonprofit-program-funding/src/main/resources/static/designdocs/FINAL_PROJECT_PROPOSAL.pdf).
 
 *I came up with this idea in consultation with my endlessly loving, hard-working, beautiful wife Liz, who is a program manager for a public health nonprofit (...when she's not working overnight as a bedside nurse, or being called "Mom"). This project, not to mention my career as a developer, would not exist without her support.*
 
@@ -15,11 +15,12 @@ This repository contains all process documents, code, and documentation for my f
 
 ## Technologies used
 
-- Java
+- Java 17
 - Gradle
-- Spring Boot
+- Spring Boot 3
+- Swagger 3
 - DBeaver
-- Advanced Rest Client
+- Advanced REST Client
 - MySQL Workbench
 
 ---
@@ -41,3 +42,7 @@ This repository contains all process documents, code, and documentation for my f
 ### *Optional query parameters added for ```PUT```*  
 
 When including a Grant ID or Donation ID (but not both) as a query string parameter in ```PUT``` requests to ```/program/programId```, the associated Grant or Donation (if it exists) is associated with that program in the database.  
+
+### *Documentation completed with Swagger*
+
+The proposal document listed full RAML documentation as a stretch goal. I was able to complete this goal, however, I used Swagger to produce OpenAPI 3.0.0 documentation instead of RAML. If running this project on your local machine, I configured the application.properties file to redirect you directly to the Swagger UI at ```http://localhost:8080```.

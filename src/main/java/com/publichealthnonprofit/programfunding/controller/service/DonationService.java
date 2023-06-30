@@ -139,7 +139,7 @@ public class DonationService {
     private void setUpdatedFieldsInDonation(Donation donation, DonationData donationData) {
         DonationDonor updatedDonor = donationData.getDonor();
         Date updatedDonationDate = donationData.getDonationDate();
-        Float updatedDonationAmount = donationData.getDonationAmount();
+        Double updatedDonationAmount = donationData.getDonationAmount();
         if (Objects.nonNull(updatedDonor)) {
             donation.setDonor(findDonorById(updatedDonor.getDonorId()));
         }
@@ -162,7 +162,7 @@ public class DonationService {
     }
     
     @Transactional(readOnly = false)
-    public void deleteDonationById(Long donationId) {
+    public void deleteDonation(Long donationId) {
         if (donationDao.existsById(donationId)) {
             donationDao.deleteById(donationId);
         } else {

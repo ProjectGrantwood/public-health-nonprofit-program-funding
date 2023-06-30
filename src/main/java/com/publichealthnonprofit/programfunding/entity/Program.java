@@ -27,9 +27,9 @@ public class Program {
     // Data
     
     private String programName;
-    private Float programBudget;
-    private Float programBudgetPercentageGrantFunded;
-    private Float programBudgetPercentageDonationFunded;
+    private Double programBudget;
+    private Double programBudgetPercentageGrantFunded;
+    private Double programBudgetPercentageDonationFunded;
     
     // Foriegn Key
     

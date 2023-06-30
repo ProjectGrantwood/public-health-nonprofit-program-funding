@@ -72,9 +72,9 @@ public class ProgramService {
         String programName = program.getProgramName();
         Optional<Boolean> programNameOptional = programDao.existsByProgramName(programName);
         boolean programNameExists = programNameOptional.isPresent() && programNameOptional.get();
-        Float programBudgetPercentageGrantFunded = program.getProgramBudgetPercentageGrantFunded();
-        Float programBudgetPercentageDonationFunded = program.getProgramBudgetPercentageDonationFunded();
-        Float programBudgetPercentageTotal = programBudgetPercentageGrantFunded + programBudgetPercentageDonationFunded;
+        Double programBudgetPercentageGrantFunded = program.getProgramBudgetPercentageGrantFunded();
+        Double programBudgetPercentageDonationFunded = program.getProgramBudgetPercentageDonationFunded();
+        Double programBudgetPercentageTotal = programBudgetPercentageGrantFunded + programBudgetPercentageDonationFunded;
         if (programNameExists) {
             throw new DuplicateKeyException("Program name already exists");
         } else if (programBudgetPercentageGrantFunded > 1.0 || programBudgetPercentageGrantFunded < 0.0) {
@@ -131,9 +131,9 @@ public class ProgramService {
     
     private void updateFieldsInProgram(Program program, ProgramData programData) {
         String updatedProgramName = programData.getProgramName();
-        Float updatedProgramBudget = programData.getProgramBudget();
-        Float updatedProgramBudgetPercentageDonationFunded = programData.getProgramBudgetPercentageDonationFunded();
-        Float updatedProgramBudgetPercentageGrantFunded = programData.getProgramBudgetPercentageGrantFunded();
+        Double updatedProgramBudget = programData.getProgramBudget();
+        Double updatedProgramBudgetPercentageDonationFunded = programData.getProgramBudgetPercentageDonationFunded();
+        Double updatedProgramBudgetPercentageGrantFunded = programData.getProgramBudgetPercentageGrantFunded();
         if (Objects.nonNull(updatedProgramName)) {
             program.setProgramName(updatedProgramName);
         }

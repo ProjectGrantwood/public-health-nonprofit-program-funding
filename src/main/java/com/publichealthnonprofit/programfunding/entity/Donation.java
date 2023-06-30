@@ -28,7 +28,7 @@ public class Donation {
   // Data
     
     private Date donationDate;
-    private Float donationAmount;
+    private Double donationAmount;
     
     
     // Foreign Key

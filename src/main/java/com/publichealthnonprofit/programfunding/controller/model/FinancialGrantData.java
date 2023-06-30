@@ -20,7 +20,7 @@ public class FinancialGrantData {
     
     private Long financialGrantId;
     private String financialGrantName;
-    private Float financialGrantAmount;
+    private Double financialGrantAmount;
     private Date financialGrantStartDate;
     private Date financialGrantEndDate;
     private FinancialGrantGrantingOrg grantingOrg;
@@ -63,9 +63,9 @@ public class FinancialGrantData {
     public static class FinancialGrantProgram {
         private Long programId;
         private String programName;
-        private Float programBudget;
-        private Float programBudgetPercentageGrantFunded;
-        private Float programBudgetPercentageDonationFunded;
+        private Double programBudget;
+        private Double programBudgetPercentageGrantFunded;
+        private Double programBudgetPercentageDonationFunded;
         
         public FinancialGrantProgram(Program program){
             this.programId = program.getProgramId();

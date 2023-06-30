@@ -19,9 +19,9 @@ public class ProgramData {
     
     private Long programId;
     private String programName;
-    private Float programBudget;
-    private Float programBudgetPercentageGrantFunded;
-    private Float programBudgetPercentageDonationFunded;
+    private Double programBudget;
+    private Double programBudgetPercentageGrantFunded;
+    private Double programBudgetPercentageDonationFunded;
     private List<ProgramDonation> donations;
     private List<ProgramFinancialGrant> financialGrants;
     
@@ -43,7 +43,7 @@ public class ProgramData {
         private Long donationId;
         private DonationDonor donor;
         private Date donationDate;
-        private Float donationAmount;
+        private Double donationAmount;
         
         public ProgramDonation(Donation donation) {
             this.donationId = donation.getDonationId();
@@ -60,7 +60,7 @@ public class ProgramData {
     public static class ProgramFinancialGrant {
         private Long financialGrantId;
         private String financialGrantName;
-        private Float financialGrantAmount;
+        private Double financialGrantAmount;
         private Date financialGrantStartDate;
         private Date financialGrantEndDate;
         
