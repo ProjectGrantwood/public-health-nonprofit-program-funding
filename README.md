@@ -29,15 +29,15 @@ For more information on the project details, please refer to the proposal docume
 
 ### *```Grant``` is now ```FinancialGrant```*
 
-   The proposal lists a "grant" table, as well as an associated endpoint. Seeing as ```GRANT``` is a keyword in MySQL, actually using this as a name for a table resulted in major errors. I changed the word to ```FinancialGrant``` or any number of appropriate variations throughout the project.
+The proposal lists a "grant" table, as well as an associated endpoint. Seeing as ```GRANT``` is a keyword in MySQL, actually using this as a name for a table resulted in major errors. I changed the word to ```FinancialGrant``` or any number of appropriate variations throughout the project.
 
 ### *Requests cannot expect extra JSON fields*  
 
-   ```PUT``` requests to both the ```FinancialGrant``` and ```Donation``` endpoints were both proposed to accept an extra optional JSON field called ```programAllotments```, which was intended to allow the user to specify how much of the grant or donation was to be allocated to each program. This would have required writing a custom deserializer, a task better suited to applications developed with Spring Framework instead of Spring Boot. This was how I learned that Spring Boot is good for quick development of straightforward applications, but not so great if complex behaviors are needed.
+```PUT``` requests to both the ```FinancialGrant``` and ```Donation``` endpoints were both proposed to accept an extra optional JSON field called ```programAllotments```, which was intended to allow the user to specify how much of the grant or donation was to be allocated to each program. This would have required writing a custom deserializer, a task better suited to applications developed with Spring Framework instead of Spring Boot. This was how I learned that Spring Boot is good for quick development of straightforward applications, but not so great if complex behaviors are needed.
 
 ### *Required query parameters added for ```POST```*
 
-   When sending a ```POST``` request that creates a new Donation or new Grant, there is now a required query parameter specifying a Donor ID or Granting Organization ID, respectively. Otherwise there was no behavior in any of the existing requests that would actually create this association.  
+When sending a ```POST``` request that creates a new Donation or new Grant, there is now a required query parameter specifying a Donor ID or Granting Organization ID, respectively. Otherwise there was no behavior in any of the existing requests that would actually create this association.  
 
 ### *Optional query parameters added for ```PUT```*  
 
@@ -45,4 +45,10 @@ When including a Grant ID or Donation ID (but not both) as a query string parame
 
 ### *Documentation completed with Swagger*
 
-The proposal document listed full RAML documentation as a stretch goal. I was able to complete this goal, however, I used Swagger to produce OpenAPI 3.0.0 documentation instead of RAML. If running this project on your local machine, I configured the application.properties file to redirect you directly to the Swagger UI at ```http://localhost:8080```.
+The proposal document listed full RAML documentation as a stretch goal. I was able to complete this goal, however, I used Swagger to produce OpenAPI 3.0.0 documentation instead of RAML. If running this project on your local machine, I configured the application.properties file to redirect you directly to the Swagger UI at ```http://localhost:8080```.  
+
+### *Added some non-trivial test cases*
+
+I added a few non-trivial test cases to the ```ProgramControllerMockMvcTest``` class. Adding test cases was listed as "encouraged but not required" in the project description, but my understanding is that testing is immensely important to the maintainability of any codebase, and I felt that I needed to showcase some ability to write robust test cases. This is an area that was not heavily covered in our curriculum -- it was given a single week out of 18, and moreover, was generally absent from our example projects and coding assignments. 
+
+My continued exposure to professional development culture, however, indicates more and more that testing is a major part of creating strong, maintainable codebases. It became clear to me that to be a competitive developer, I had to at least have a few tests that were application-specific and required something other than a simple ```assertEquals()``` statement. The included tests are not exhaustive, but they do demonstrate that I have the ability to write tests that would be appropriate in production-level code.
