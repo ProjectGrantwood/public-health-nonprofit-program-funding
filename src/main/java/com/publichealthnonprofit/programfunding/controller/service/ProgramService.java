@@ -170,4 +170,14 @@ public class ProgramService {
         return new ProgramData(programDao.save(program));
     }
     
+    @Transactional(readOnly = true)
+    public Donation findDonationById(Long donationId){
+        return donationDao.findById(donationId).orElseThrow(() -> new NoSuchElementException("Donation not found with id " + donationId));
+    }
+    
+    @Transactional(readOnly = true)
+    public FinancialGrant findFinancialGrantById(Long financialGrantId){
+        return financialGrantDao.findById(financialGrantId).orElseThrow(() -> new NoSuchElementException("Financial Grant not found with id " + financialGrantId));
+    }
+    
 }
