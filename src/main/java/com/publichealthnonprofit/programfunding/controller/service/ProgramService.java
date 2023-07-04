@@ -42,47 +42,23 @@ public class ProgramService {
 
     @Transactional(readOnly = true)
     public List<ProgramData> getAllProgramsByFinancialGrantId(Long financialGrantIdValue) {
-        List<Program> allPrograms = getAllPrograms();
-        List<Program> filteredByGrant = filterProgramListByFinancialGrantId(allPrograms, financialGrantIdValue);
-        return filteredByGrant.stream().map(ProgramData::new).toList();
+        return programDao.findByFinancialGrantId(financialGrantIdValue).stream().map(ProgramData::new).toList();
     }
 
 
     @Transactional(readOnly = true)
     public List<ProgramData> getAllProgramsByDonationId(Long donationIdValue) {
-        List<Program> allPrograms = getAllPrograms();
-        List<Program> filteredByDonation = filterProgramListByDonationId(allPrograms, donationIdValue);
-        return filteredByDonation.stream().map(ProgramData::new).toList();
+        return programDao.findByDonationId(donationIdValue).stream().map(ProgramData::new).toList();
     }
 
     @Transactional(readOnly = true)
     public List<ProgramData> getAllProgramsByGrantingOrgId(Long grantingOrgIdValue) {
-        List<Program> allPrograms = getAllPrograms();
-        List<Program> filteredByGrantingOrg = filterProgramListByGrantingOrgId(allPrograms, grantingOrgIdValue);
-        return filteredByGrantingOrg.stream().map(ProgramData::new).toList();
+        return programDao.findByGrantingOrgId(grantingOrgIdValue).stream().map(ProgramData::new).toList();
     }
 
     @Transactional(readOnly = true)
     public List<ProgramData> getAllProgramsByDonorId(Long donorIdValue) {
-        List<Program> allPrograms = getAllPrograms();
-        List<Program> filteredByDonor = filterProgramListByDonorId(allPrograms, donorIdValue);
-        return filteredByDonor.stream().map(ProgramData::new).toList();
-    }
-    
-    public List<Program> filterProgramListByDonorId(List<Program> programList, Long donorIdValue) {
-        return programList.stream().filter(program -> program.getDonations().stream().anyMatch(donation -> donation.getDonor().getDonorId().equals(donorIdValue))).toList();
-    }
-    
-    public List<Program> filterProgramListByGrantingOrgId(List<Program> programList, Long grantingOrgIdValue) {
-        return programList.stream().filter(program -> program.getFinancialGrants().stream().anyMatch(financialGrant -> financialGrant.getGrantingOrg().getGrantingOrgId().equals(grantingOrgIdValue))).toList();
-    }
-    
-    public List<Program> filterProgramListByDonationId(List<Program> programList, Long donationIdValue) {
-        return programList.stream().filter(program -> program.getDonations().stream().anyMatch(donation -> donation.getDonationId().equals(donationIdValue))).toList();
-    }
-    
-    public List<Program> filterProgramListByFinancialGrantId(List<Program> programList, Long financialGrantIdValue) {
-        return programList.stream().filter(program -> program.getFinancialGrants().stream().anyMatch(financialGrant -> financialGrant.getFinancialGrantId().equals(financialGrantIdValue))).toList();
+        return programDao.findByDonorId(donorIdValue).stream().map(ProgramData::new).toList();
     }
     
     @Transactional(readOnly = false)
@@ -192,16 +168,6 @@ public class ProgramService {
         }
         program.getDonations().add(donation);
         return new ProgramData(programDao.save(program));
-    }
-    
-    @Transactional(readOnly = true)
-    public Donation findDonationById(Long donationId){
-        return donationDao.findById(donationId).orElseThrow(() -> new NoSuchElementException("Donation not found with id " + donationId));
-    }
-    
-    @Transactional(readOnly = true)
-    public FinancialGrant findFinancialGrantById(Long financialGrantId){
-        return financialGrantDao.findById(financialGrantId).orElseThrow(() -> new NoSuchElementException("Financial Grant not found with id " + financialGrantId));
     }
     
 }

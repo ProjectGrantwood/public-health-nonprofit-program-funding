@@ -49,4 +49,4 @@ The proposal document listed full RAML documentation as a stretch goal. I was ab
 
 ### *Added some non-trivial test cases*
 
-I added a few non-trivial test cases to the ```ProgramControllerMockMvcTest``` class. Adding test cases was listed as "encouraged but not required" in the project description, but my understanding is that testing is immensely important to the maintainability of any codebase, and I felt that I needed to showcase some ability to write robust test cases. The included tests are far from exhaustive, but they do demonstrate that I have the ability to write tests that would be appropriate in a real-world application.
+I added a few non-trivial unit test cases to the ```ProgramControllerMockMvcTest``` class. Adding test cases was listed as "encouraged but not required" in the project description, but my understanding is that testing is immensely important to the maintainability of any codebase, and I felt that I needed to showcase some ability to write robust test cases. The included tests are far from exhaustive, but they do demonstrate that I have the ability to write tests that would be appropriate in a real-world application.
