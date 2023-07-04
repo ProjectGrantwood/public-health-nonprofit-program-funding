@@ -5,7 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import java.sql.Date;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -55,7 +55,7 @@ public class FinancialGrant {
     
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToMany(mappedBy = "financialGrants", cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "financialGrant", cascade = CascadeType.PERSIST)
     private Set<Program> programs = new HashSet<>();
     
     

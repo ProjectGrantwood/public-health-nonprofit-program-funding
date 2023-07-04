@@ -21,45 +21,63 @@ import com.publichealthnonprofit.programfunding.controller.model.ProgramData;
 import com.publichealthnonprofit.programfunding.controller.service.ProgramService;
 import com.publichealthnonprofit.programfunding.entity.Program;
 
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
+@Tag(name = "Program")
 @RestController
 @RequestMapping("/program_funding")
 @Slf4j
 public class ProgramController {
-    
+
     @Autowired
     private ProgramService programService;
-    
+
+    // GET /program
+
+    @Operation(summary = "Get all programs", description = "Get all programs. Optionally, filter by donor, granting organization, donation, or financial grant.")
     @GetMapping("/program")
     @ResponseStatus(code = HttpStatus.OK)
     public List<ProgramData> getAllPrograms(
-        @RequestParam(required = false) Optional<Long> donorId, 
-        @RequestParam(required = false) Optional<Long> grantingOrgId, 
-        @RequestParam(required = false) Optional<Long> donationId,
-        @RequestParam(required = false) Optional<Long> financialGrantId
-    ) {
-        
-        /* We need to check if more than one of the query parameters is present. If so, we need to throw an error.
-         We don't care which ones are present, just that the total number of them is less than or equal to 1.
-         The DRYest way to do this is to put them in an array, loop through it counting the numbe of true values, 
-         and throw an error directly in the loop body if the count is ever greater than 1. */
-        
-        boolean[] queryParamPresent = {donorId.isPresent(), grantingOrgId.isPresent(), donationId.isPresent(), financialGrantId.isPresent()};
+            @Parameter(description = "Search all programs to which a specific donor has made at least one donation") @RequestParam(required = false) Optional<Long> donorId,
+            @Parameter(description = "Search all programs to which at least one grant from a specific organization has been applied") @RequestParam(required = false) Optional<Long> grantingOrgId,
+            @Parameter(description = "Search all programs associated with a specific donation") @RequestParam(required = false) Optional<Long> donationId,
+            @Parameter(description = "Search all programs associated with a specific grant") @RequestParam(required = false) Optional<Long> financialGrantId) {
+        /*
+         * We need to check if more than one of the query parameters is present. If so,
+         * we need to throw an error.
+         * We don't care which ones are present, just that the total number of them is
+         * less than or equal to 1.
+         * The DRYest way to do this is to put them in an array, loop through it
+         * counting the numbe of true values,
+         * and throw an error directly in the loop body if the count is ever greater
+         * than 1.
+         */
+        boolean[] queryParamPresent = {
+                donorId.isPresent(),
+                grantingOrgId.isPresent(),
+                donationId.isPresent(),
+                financialGrantId.isPresent()
+        };
         int trueCount = 0;
         for (boolean queryParam : queryParamPresent) {
             if (queryParam) {
                 trueCount++;
-                if (trueCount > 1){
+                if (trueCount > 1) {
                     log.warn("More than one query parameter is present. Only one is allowed at a time.");
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "More than one query parameter is present. Only one is allowed at a time.");
+                    throw new IllegalArgumentException(
+                            "More than one query parameter is present. Only one is allowed at a time.");
                 }
             }
         }
-        
-        /* Since we already have the presence of each query parameter stored in an array,
-        we'll just reference the array instead of calling isPresent() again. */
-        
+        /*
+         * Since we already have the presence of each query parameter stored in an
+         * array,
+         * we'll just reference the array instead of calling isPresent() again.
+         */
         if (queryParamPresent[0]) {
             Long donorIdValue = donorId.get();
             log.info("Getting all programs for donor ID {}...", donorIdValue);
@@ -77,36 +95,48 @@ public class ProgramController {
             log.info("Getting all programs for financial grant ID {}...", financialGrantIdValue);
             return programService.getAllProgramsByFinancialGrantId(financialGrantIdValue);
         }
-        
         // Finally, if no query params are present, we just get all programs.
-        
         log.info("Getting all programs...");
-        return programService.getAllPrograms();
+        return programService.getAllProgramsAsProgramData();
     }
-    
+
+    // POST /program
+
+    @Operation(summary = "Create a new program", description = "Create a new program.")
     @PostMapping("/program")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ProgramData createProgram(@RequestBody Program program) {
         log.info("Creating program...");
         return programService.createProgram(program);
     }
-    
+
+    // GET /program/{programId}
+
+    @Operation(summary = "Get a specific program", description = "Get a program by its associated ID.")
     @GetMapping("/program/{programId}")
     @ResponseStatus(code = HttpStatus.OK)
     public ProgramData getProgramById(@PathVariable Long programId) {
         log.info("Getting program with ID {}...", programId);
         return programService.getProgramById(programId);
     }
-    
+
+    // PUT /program/{programId}
+
+    @Operation(summary = "Update a specific program", description = "Update a program by its associated ID. Optionally, associate a financial grant or donation with the program.")
     @PutMapping("/program/{programId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public ProgramData updateProgram(@PathVariable Long programId, @RequestBody Program program, @RequestParam(required = false) Optional<Long> financialGrantId, @RequestParam(required = false) Optional<Long> donationId) {
+    public ProgramData updateProgram(
+            @PathVariable Long programId,
+            @RequestBody(required = false) Program program,
+            @Parameter(description = "Associate a grant specified by numeric ID with the program") @RequestParam(required = false) Optional<Long> financialGrantId,
+            @Parameter(description = "Assocaite a donation specified by numeric ID with the program") @RequestParam(required = false) Optional<Long> donationId) {
         log.info("Updating program with ID {}...", programId);
         boolean financialGrantIdPresent = financialGrantId.isPresent();
         boolean donationIdPresent = donationId.isPresent();
-        if (financialGrantIdPresent && donationIdPresent){
+        if (financialGrantIdPresent && donationIdPresent) {
             log.warn("Both financial grant ID and donation ID are present. Only one is allowed at a time.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Both financial grant ID and donation ID are present. Only one is allowed at a time.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Both financial grant ID and donation ID are present. Only one is allowed at a time.");
         } else if (financialGrantIdPresent) {
             Long financialGrantIdValue = financialGrantId.get();
             log.info("Adding financial grant with ID {} to program with ID {}...", financialGrantIdValue, programId);
@@ -118,14 +148,20 @@ public class ProgramController {
         }
         return programService.updateProgram(programId, program);
     }
-    
+
+    // DELETE /program/{programId}
+
+    @Hidden
     @DeleteMapping("/program/{programId}")
     @ResponseStatus(code = HttpStatus.METHOD_NOT_ALLOWED)
     public void deleteProgram(@PathVariable Long programId) {
         log.warn("Deleting a program is not a supported operation.");
         throw new UnsupportedOperationException("Deleting a program is not a supported operation.");
     }
-    
+
+    // DELETE /program
+
+    @Hidden
     @DeleteMapping("/program")
     @ResponseStatus(code = HttpStatus.METHOD_NOT_ALLOWED)
     public void deleteAllPrograms() {
