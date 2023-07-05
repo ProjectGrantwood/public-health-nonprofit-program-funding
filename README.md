@@ -15,7 +15,7 @@ For more information on the project details, please refer to the proposal docume
 
 ## Technologies used
 
-- Java 20
+- Java 17
 - Gradle
 - Spring Boot 3
 - Swagger 3
@@ -33,8 +33,7 @@ The proposal lists a "grant" table, as well as an associated endpoint. Seeing as
 
 ### *Requests cannot expect extra JSON fields*  
 
-```PUT``` requests to both the ```FinancialGrant``` and ```Donation``` endpoints were both proposed to accept an extra optional JSON field called ```programAllotments```, which was intended to allow the user to specify how much of the grant or donation was to be allocated to each program. This required additional columns in the ```program_donation``` and ```program_financial_grant``` tables where the allotment percentages would have been stored. At first this appeared to be a simple problem where I could write a custom object to represent the request body, but the proposal also described extra colums in each respective join table to store the data. The way Hibernate generates join tables, however, does not allow for the addition of extra columns in join tables explicitly, and the workaround (involving the creation of intermediate entities to represent the join tables) would have required massive refactoring of code that was already written and tested. In a real-world application, I would have utilized tools such as version control and feature branches to allow for this kind of refactoring, but it seemed more prudent to showcase my broader skillset in Spring Boot rather than focus on this one feature.  
-
+```PUT``` requests to both the ```FinancialGrant``` and ```Donation``` endpoints were both proposed to accept an extra optional JSON field called ```programAllotments```, which was intended to allow the user to specify how much of the grant or donation was to be allocated to each program. This would have required writing a custom deserializer, a task better suited to applications developed with Spring Framework instead of Spring Boot. This was how I learned that Spring Boot is good for quick development of straightforward applications, but not so great if complex behaviors are needed.
 
 ### *Required query parameters added for ```POST```*
 
