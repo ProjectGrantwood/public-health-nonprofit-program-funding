@@ -3,8 +3,8 @@ package com.publichealthnonprofit.programfunding.controllerTests;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.publichealthnonprofit.programfunding.controller.model.ProgramData;
-import com.publichealthnonprofit.programfunding.entity.Program;
+import com.publichealthnonprofit.programfunding.dto.ProgramDto;
+import com.publichealthnonprofit.programfunding.model.Program;
 
 public class ProgramControllerTestDataGeneration {
     
@@ -20,8 +20,8 @@ public class ProgramControllerTestDataGeneration {
         "?grantingOrgId=1&donorId=1&financialGrantId=1"
     );
     
-    private ProgramData generateTestProgramData(String programName, Double programBudget, Double programBudgetPercentageDonationFunded, Double programBudgetPercentageGrantFunded) {
-        ProgramData testProgramData = new ProgramData();
+    private ProgramDto generateTestProgramData(String programName, Double programBudget, Double programBudgetPercentageDonationFunded, Double programBudgetPercentageGrantFunded) {
+        ProgramDto testProgramData = new ProgramDto();
         testProgramData.setProgramName(programName);
         testProgramData.setProgramBudget(programBudget);
         testProgramData.setProgramBudgetPercentageDonationFunded(programBudgetPercentageDonationFunded);
@@ -49,8 +49,8 @@ public class ProgramControllerTestDataGeneration {
         return testProgramList;
     }
     
-    protected List<ProgramData> generateTestProgramDataList() {
-        List<ProgramData> testProgramDataList = new ArrayList<>();
+    protected List<ProgramDto> generateTestProgramDataList() {
+        List<ProgramDto> testProgramDataList = new ArrayList<>();
         testProgramDataList.add(generateTestProgramData("testProgramName", 1000.00, 0.5, 0.5));
         testProgramDataList.add(generateTestProgramData("testProgramName2", 2000.00, 0.4, 0.6));
         testProgramDataList.add(generateTestProgramData("testProgramName3", 3000.00, 0.3, 0.7));

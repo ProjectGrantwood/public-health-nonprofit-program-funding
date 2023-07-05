@@ -1,4 +1,4 @@
-package com.publichealthnonprofit.programfunding.controller.endpoints;
+package com.publichealthnonprofit.programfunding.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.publichealthnonprofit.programfunding.controller.model.DonationData;
-import com.publichealthnonprofit.programfunding.controller.service.DonationService;
-import com.publichealthnonprofit.programfunding.entity.Donation;
+import com.publichealthnonprofit.programfunding.dto.DonationDto;
+import com.publichealthnonprofit.programfunding.model.Donation;
+import com.publichealthnonprofit.programfunding.service.DonationService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -40,7 +40,7 @@ public class DonationController {
     @Operation(summary = "Get all donations", description = "Get all donations, or get all donations for a specific donor or program.")
     @GetMapping("/donation")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<DonationData> getAllDonations(@RequestParam(required = false) Optional<Long> donorId,
+    public List<DonationDto> getAllDonations(@RequestParam(required = false) Optional<Long> donorId,
             @RequestParam(required = false) Optional<Long> programId) {
         if (donorId.isPresent() && programId.isPresent()) {
             log.warn("Donor ID and Program ID are both present. Only one is allowed at a time.");
@@ -63,7 +63,7 @@ public class DonationController {
     @Operation(summary = "Create a donation", description = "Create a donation, optionally specifying the program with which it is associated.")
     @PostMapping("/donation")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public DonationData createDonation(
+    public DonationDto createDonation(
             @Parameter(description = "The donor associated with this donation, specified by numeric ID.") @RequestParam(required = true) Optional<Long> donorId,
             @Parameter(description = "The program with which to optionally associate this donation, specified by numeric ID.") @RequestParam(required = false) Optional<Long> programId,
             @RequestBody Donation donation) {
@@ -81,7 +81,7 @@ public class DonationController {
     @Operation(summary = "Get a specific donation", description = "Search for a donation specified by its numeric ID.")
     @GetMapping("/donation/{donationId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public DonationData getDonationById(@PathVariable Long donationId) {
+    public DonationDto getDonationById(@PathVariable Long donationId) {
         log.info("Getting donation by ID {}...", donationId);
         return donationService.getDonationById(donationId);
     }
@@ -91,7 +91,7 @@ public class DonationController {
     @Operation(summary = "Update a specific donation", description = "Update a donation specified by its numeric ID.")
     @PutMapping("/donation/{donationId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public DonationData updateDonation(@PathVariable Long donationId, @RequestBody Donation donation) {
+    public DonationDto updateDonation(@PathVariable Long donationId, @RequestBody Donation donation) {
         log.info("Updating donation with ID {}...", donationId);
         return donationService.updateDonation(donationId, donation);
     }

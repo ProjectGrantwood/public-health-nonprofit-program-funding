@@ -1,4 +1,4 @@
-package com.publichealthnonprofit.programfunding.controller.service;
+package com.publichealthnonprofit.programfunding.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -7,44 +7,44 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.publichealthnonprofit.programfunding.controller.model.GrantingOrgData;
-import com.publichealthnonprofit.programfunding.dao.GrantingOrgDao;
-import com.publichealthnonprofit.programfunding.entity.GrantingOrg;
-import com.publichealthnonprofit.programfunding.entity.GrantingOrg.GrantingOrgType;
+import com.publichealthnonprofit.programfunding.dto.GrantingOrgDto;
+import com.publichealthnonprofit.programfunding.model.GrantingOrg;
+import com.publichealthnonprofit.programfunding.model.GrantingOrg.GrantingOrgType;
+import com.publichealthnonprofit.programfunding.repository.GrantingOrgRepository;
 
 @Service
 public class GrantingOrgService {
     
     @Autowired
-    private GrantingOrgDao grantingOrgDao;
+    private GrantingOrgRepository grantingOrgDao;
 
     @Transactional(readOnly = true)
-    public GrantingOrgData getGrantingOrgById(Long grantingOrgId) {
-        return new GrantingOrgData(findGrantingOrgById(grantingOrgId));
+    public GrantingOrgDto getGrantingOrgById(Long grantingOrgId) {
+        return new GrantingOrgDto(findGrantingOrgById(grantingOrgId));
     }
 
     @Transactional(readOnly = true)
-    public List<GrantingOrgData> getAllGrantingOrgs() {
-        return grantingOrgDao.findAll().stream().map(GrantingOrgData::new).toList();
+    public List<GrantingOrgDto> getAllGrantingOrgs() {
+        return grantingOrgDao.findAll().stream().map(GrantingOrgDto::new).toList();
     }
 
     @Transactional(readOnly = false)
-    public GrantingOrgData createGrantingOrg(GrantingOrg grantingOrg) {
-        return saveGrantingOrgFromGrantingOrgData(new GrantingOrgData(grantingOrg));
+    public GrantingOrgDto createGrantingOrg(GrantingOrg grantingOrg) {
+        return saveGrantingOrgFromGrantingOrgData(new GrantingOrgDto(grantingOrg));
     }
     
     @Transactional(readOnly = false)
-    public GrantingOrgData updateGrantingOrg(Long grantingOrgId, GrantingOrg grantingOrg) {
+    public GrantingOrgDto updateGrantingOrg(Long grantingOrgId, GrantingOrg grantingOrg) {
         GrantingOrg grantingOrgToUpdate = findGrantingOrgById(grantingOrgId);
-        updateFieldsInGrantingOrg(grantingOrgToUpdate, new GrantingOrgData(grantingOrg));
-        return new GrantingOrgData(grantingOrgDao.save(grantingOrgToUpdate));
+        updateFieldsInGrantingOrg(grantingOrgToUpdate, new GrantingOrgDto(grantingOrg));
+        return new GrantingOrgDto(grantingOrgDao.save(grantingOrgToUpdate));
     }
     
     @Transactional(readOnly = false)
-    public GrantingOrgData saveGrantingOrgFromGrantingOrgData(GrantingOrgData grantingOrgData) {
+    public GrantingOrgDto saveGrantingOrgFromGrantingOrgData(GrantingOrgDto grantingOrgData) {
         GrantingOrg grantingOrg = findOrCreateGrantingOrg(grantingOrgData.getGrantingOrgId());
         setFieldsInGrantingOrg(grantingOrg, grantingOrgData);
-        return new GrantingOrgData(grantingOrgDao.save(grantingOrg));
+        return new GrantingOrgDto(grantingOrgDao.save(grantingOrg));
     }
     
     @Transactional(readOnly = false)
@@ -72,7 +72,7 @@ public class GrantingOrgService {
         return grantingOrgDao.findById(grantingOrgId).orElseThrow(() -> new NoSuchElementException("GrantingOrg not found with id: " + grantingOrgId));
     }
     
-    private void setFieldsInGrantingOrg(GrantingOrg grantingOrg, GrantingOrgData grantingOrgData) {
+    private void setFieldsInGrantingOrg(GrantingOrg grantingOrg, GrantingOrgDto grantingOrgData) {
         grantingOrg.setGrantingOrgName(grantingOrgData.getGrantingOrgName());
         grantingOrg.setGrantingOrgContactName(grantingOrgData.getGrantingOrgContactName());
         grantingOrg.setGrantingOrgContactEmail(grantingOrgData.getGrantingOrgContactEmail());
@@ -80,7 +80,7 @@ public class GrantingOrgService {
         grantingOrg.setGrantingOrgType(grantingOrgData.getGrantingOrgType());
     }
     
-    private void updateFieldsInGrantingOrg(GrantingOrg grantingOrg, GrantingOrgData grantingOrgData) {
+    private void updateFieldsInGrantingOrg(GrantingOrg grantingOrg, GrantingOrgDto grantingOrgData) {
         String updatedGrantingOrgName = grantingOrgData.getGrantingOrgName();
         String updatedGrantingOrgContactName = grantingOrgData.getGrantingOrgContactName();
         String updatedGrantingOrgContactEmail = grantingOrgData.getGrantingOrgContactEmail();

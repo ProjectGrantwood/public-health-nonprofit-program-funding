@@ -1,4 +1,4 @@
-package com.publichealthnonprofit.programfunding.entity;
+package com.publichealthnonprofit.programfunding.model;
 
 import java.util.HashSet;
 import java.util.Set;

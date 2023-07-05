@@ -1,11 +1,11 @@
-package com.publichealthnonprofit.programfunding.controller.model;
+package com.publichealthnonprofit.programfunding.dto;
 
 import java.util.Date;
 import java.util.List;
 
-import com.publichealthnonprofit.programfunding.entity.FinancialGrant;
-import com.publichealthnonprofit.programfunding.entity.GrantingOrg;
-import com.publichealthnonprofit.programfunding.entity.GrantingOrg.GrantingOrgType;
+import com.publichealthnonprofit.programfunding.model.FinancialGrant;
+import com.publichealthnonprofit.programfunding.model.GrantingOrg;
+import com.publichealthnonprofit.programfunding.model.GrantingOrg.GrantingOrgType;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Hidden
 @Data
 @NoArgsConstructor
-public class GrantingOrgData {
+public class GrantingOrgDto {
     private Long grantingOrgId;
     private String grantingOrgName;
     private String grantingOrgContactName;
@@ -23,7 +23,7 @@ public class GrantingOrgData {
     private GrantingOrgType grantingOrgType;
     private List<GrantingOrgFinancialGrant> financialGrants;
     
-    public GrantingOrgData(GrantingOrg grantingOrg){
+    public GrantingOrgDto(GrantingOrg grantingOrg){
         this.grantingOrgId = grantingOrg.getGrantingOrgId();
         this.grantingOrgName = grantingOrg.getGrantingOrgName();
         this.grantingOrgContactName = grantingOrg.getGrantingOrgContactName();

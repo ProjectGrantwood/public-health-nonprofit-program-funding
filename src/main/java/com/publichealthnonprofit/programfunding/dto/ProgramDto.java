@@ -1,12 +1,12 @@
-package com.publichealthnonprofit.programfunding.controller.model;
+package com.publichealthnonprofit.programfunding.dto;
 
 import java.util.Date;
 import java.util.List;
 
-import com.publichealthnonprofit.programfunding.controller.model.DonationData.DonationDonor;
-import com.publichealthnonprofit.programfunding.entity.Donation;
-import com.publichealthnonprofit.programfunding.entity.FinancialGrant;
-import com.publichealthnonprofit.programfunding.entity.Program;
+import com.publichealthnonprofit.programfunding.dto.DonationDto.DonationDonor;
+import com.publichealthnonprofit.programfunding.model.Donation;
+import com.publichealthnonprofit.programfunding.model.FinancialGrant;
+import com.publichealthnonprofit.programfunding.model.Program;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Hidden
 @Data
 @NoArgsConstructor
-public class ProgramData {
+public class ProgramDto {
     
     private Long programId;
     private String programName;
@@ -25,7 +25,7 @@ public class ProgramData {
     private List<ProgramDonation> donations;
     private List<ProgramFinancialGrant> financialGrants;
     
-    public ProgramData(Program program){
+    public ProgramDto(Program program){
         this.programId = program.getProgramId();
         this.programName = program.getProgramName();
         this.programBudget = program.getProgramBudget();

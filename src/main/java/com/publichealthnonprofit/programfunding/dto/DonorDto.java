@@ -1,11 +1,11 @@
-package com.publichealthnonprofit.programfunding.controller.model;
+package com.publichealthnonprofit.programfunding.dto;
 
 import java.util.Date;
 import java.util.List;
 
-import com.publichealthnonprofit.programfunding.controller.model.DonationData.DonationProgram;
-import com.publichealthnonprofit.programfunding.entity.Donation;
-import com.publichealthnonprofit.programfunding.entity.Donor;
+import com.publichealthnonprofit.programfunding.dto.DonationDto.DonationProgram;
+import com.publichealthnonprofit.programfunding.model.Donation;
+import com.publichealthnonprofit.programfunding.model.Donor;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Hidden
 @Data
 @NoArgsConstructor
-public class DonorData {
+public class DonorDto {
     
     // Primary Key
     
@@ -29,7 +29,7 @@ public class DonorData {
     private String donorAffiliation;
     private List<DonorDonation> donations;
     
-    public DonorData(Donor donor) {
+    public DonorDto(Donor donor) {
         this.donorId = donor.getDonorId();
         this.donorName = donor.getDonorName();
         this.donorEmail = donor.getDonorEmail();

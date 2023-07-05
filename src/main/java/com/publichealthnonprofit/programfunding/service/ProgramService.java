@@ -1,4 +1,4 @@
-package com.publichealthnonprofit.programfunding.controller.service;
+package com.publichealthnonprofit.programfunding.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -10,29 +10,29 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.publichealthnonprofit.programfunding.controller.model.ProgramData;
-import com.publichealthnonprofit.programfunding.dao.DonationDao;
-import com.publichealthnonprofit.programfunding.dao.FinancialGrantDao;
-import com.publichealthnonprofit.programfunding.dao.ProgramDao;
-import com.publichealthnonprofit.programfunding.entity.Donation;
-import com.publichealthnonprofit.programfunding.entity.FinancialGrant;
-import com.publichealthnonprofit.programfunding.entity.Program;
+import com.publichealthnonprofit.programfunding.dto.ProgramDto;
+import com.publichealthnonprofit.programfunding.model.Donation;
+import com.publichealthnonprofit.programfunding.model.FinancialGrant;
+import com.publichealthnonprofit.programfunding.model.Program;
+import com.publichealthnonprofit.programfunding.repository.DonationRepository;
+import com.publichealthnonprofit.programfunding.repository.FinancialGrantRepository;
+import com.publichealthnonprofit.programfunding.repository.ProgramRepository;
 
 @Service
 public class ProgramService {
     
     @Autowired
-    private ProgramDao programDao;
+    private ProgramRepository programDao;
     
     @Autowired
-    private FinancialGrantDao financialGrantDao;
+    private FinancialGrantRepository financialGrantDao;
     
     @Autowired
-    private DonationDao donationDao;
+    private DonationRepository donationDao;
 
     @Transactional(readOnly = true)
-    public List<ProgramData> getAllProgramsAsProgramData() {
-        return programDao.findAll().stream().map(ProgramData::new).toList();
+    public List<ProgramDto> getAllProgramsAsProgramData() {
+        return programDao.findAll().stream().map(ProgramDto::new).toList();
     }
     
     @Transactional(readOnly = true)
@@ -41,28 +41,28 @@ public class ProgramService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProgramData> getAllProgramsByFinancialGrantId(Long financialGrantIdValue) {
-        return programDao.findByFinancialGrantId(financialGrantIdValue).stream().map(ProgramData::new).toList();
+    public List<ProgramDto> getAllProgramsByFinancialGrantId(Long financialGrantIdValue) {
+        return programDao.findByFinancialGrantId(financialGrantIdValue).stream().map(ProgramDto::new).toList();
     }
 
 
     @Transactional(readOnly = true)
-    public List<ProgramData> getAllProgramsByDonationId(Long donationIdValue) {
-        return programDao.findByDonationId(donationIdValue).stream().map(ProgramData::new).toList();
+    public List<ProgramDto> getAllProgramsByDonationId(Long donationIdValue) {
+        return programDao.findByDonationId(donationIdValue).stream().map(ProgramDto::new).toList();
     }
 
     @Transactional(readOnly = true)
-    public List<ProgramData> getAllProgramsByGrantingOrgId(Long grantingOrgIdValue) {
-        return programDao.findByGrantingOrgId(grantingOrgIdValue).stream().map(ProgramData::new).toList();
+    public List<ProgramDto> getAllProgramsByGrantingOrgId(Long grantingOrgIdValue) {
+        return programDao.findByGrantingOrgId(grantingOrgIdValue).stream().map(ProgramDto::new).toList();
     }
 
     @Transactional(readOnly = true)
-    public List<ProgramData> getAllProgramsByDonorId(Long donorIdValue) {
-        return programDao.findByDonorId(donorIdValue).stream().map(ProgramData::new).toList();
+    public List<ProgramDto> getAllProgramsByDonorId(Long donorIdValue) {
+        return programDao.findByDonorId(donorIdValue).stream().map(ProgramDto::new).toList();
     }
     
     @Transactional(readOnly = false)
-    public ProgramData createProgram(Program program) {
+    public ProgramDto createProgram(Program program) {
             /* We need to perform several checks: 
             - Is the program name unique?
             - Are the percentageBudget fields represented as decimals (e.g. 0.5 instead of 50)?
@@ -83,19 +83,19 @@ public class ProgramService {
         } else if (programBudgetPercentageTotal != 1.0) {
             throw new IllegalArgumentException("Grant-funded and donation-funded percentages must add up to 1.0");
         }
-        return saveProgramFromProgramData(new ProgramData(program));
+        return saveProgramFromProgramData(new ProgramDto(program));
     }
     
     @Transactional(readOnly = true)
-    public ProgramData getProgramById(Long programId) {
-        return new ProgramData(findProgramById(programId));
+    public ProgramDto getProgramById(Long programId) {
+        return new ProgramDto(findProgramById(programId));
     }
     
     @Transactional(readOnly = false)
-    public ProgramData updateProgram(Long programId, Program program) {
+    public ProgramDto updateProgram(Long programId, Program program) {
         Program programToUpdate = findProgramById(programId);
-        updateFieldsInProgram(programToUpdate, new ProgramData(program));
-        return new ProgramData(programDao.save(programToUpdate));
+        updateFieldsInProgram(programToUpdate, new ProgramDto(program));
+        return new ProgramDto(programDao.save(programToUpdate));
         
     }
     
@@ -105,10 +105,10 @@ public class ProgramService {
     }
     
     @Transactional(readOnly = false)
-    public ProgramData saveProgramFromProgramData(ProgramData programData) {
+    public ProgramDto saveProgramFromProgramData(ProgramDto programData) {
         Program program = findOrCreateProgram(programData.getProgramId());
         setFieldsInProgram(program, programData);
-        return new ProgramData(programDao.save(program));
+        return new ProgramDto(programDao.save(program));
     }
     
     private Program findOrCreateProgram(Long programId) {
@@ -121,14 +121,14 @@ public class ProgramService {
         return program;
     }
     
-    private void setFieldsInProgram(Program program, ProgramData programData) {
+    private void setFieldsInProgram(Program program, ProgramDto programData) {
         program.setProgramName(programData.getProgramName());
         program.setProgramBudget(programData.getProgramBudget());
         program.setProgramBudgetPercentageDonationFunded(programData.getProgramBudgetPercentageDonationFunded());
         program.setProgramBudgetPercentageGrantFunded(programData.getProgramBudgetPercentageGrantFunded());
     }
     
-    private void updateFieldsInProgram(Program program, ProgramData programData) {
+    private void updateFieldsInProgram(Program program, ProgramDto programData) {
         String updatedProgramName = programData.getProgramName();
         Double updatedProgramBudget = programData.getProgramBudget();
         Double updatedProgramBudgetPercentageDonationFunded = programData.getProgramBudgetPercentageDonationFunded();
@@ -148,26 +148,26 @@ public class ProgramService {
     }
 
     @Transactional(readOnly = false)
-    public ProgramData addFinancialGrant(Long programId, Long financialGrantIdValue) {
+    public ProgramDto addFinancialGrant(Long programId, Long financialGrantIdValue) {
         Program program = findProgramById(programId);
         FinancialGrant financialGrant = findFinancialGrantById(financialGrantIdValue);
         if (program.getFinancialGrants().contains(financialGrant)) {
             throw new IllegalArgumentException("Financial grant is already associated with program");
         }
         program.getFinancialGrants().add(financialGrant);
-        return new ProgramData(programDao.save(program));
+        return new ProgramDto(programDao.save(program));
         
     }
 
     @Transactional(readOnly = false)
-    public ProgramData addDonation(Long programId, Long donationIdValue) {
+    public ProgramDto addDonation(Long programId, Long donationIdValue) {
         Program program = findProgramById(programId);
         Donation donation = findDonationById(donationIdValue);
         if (program.getDonations().contains(donation)) {
             throw new IllegalArgumentException("Donation is already associated with program");
         }
         program.getDonations().add(donation);
-        return new ProgramData(programDao.save(program));
+        return new ProgramDto(programDao.save(program));
     }
     
     @Transactional(readOnly = true)

@@ -12,9 +12,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.publichealthnonprofit.programfunding.controller.endpoints.ProgramController;
-import com.publichealthnonprofit.programfunding.controller.model.ProgramData;
-import com.publichealthnonprofit.programfunding.controller.service.ProgramService;
+import com.publichealthnonprofit.programfunding.controller.ProgramController;
+import com.publichealthnonprofit.programfunding.dto.ProgramDto;
+import com.publichealthnonprofit.programfunding.service.ProgramService;
 
 @WebMvcTest(ProgramController.class)
 class ProgramControllerMockMvcTest extends ProgramControllerTestDataGeneration {
@@ -27,7 +27,7 @@ class ProgramControllerMockMvcTest extends ProgramControllerTestDataGeneration {
     
     @Test
     void getAllPrograms_shouldReturnProgramData() throws Exception {
-        List<ProgramData> programDataList = generateTestProgramDataList();
+        List<ProgramDto> programDataList = generateTestProgramDataList();
         when(programService.getAllProgramsAsProgramData()).thenReturn(programDataList);
         for (int i = 0; i < programDataList.size(); i++){
             mockMvc.perform(get(PROGRAM_URI))

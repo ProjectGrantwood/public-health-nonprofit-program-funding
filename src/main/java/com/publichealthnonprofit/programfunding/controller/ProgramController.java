@@ -1,4 +1,4 @@
-package com.publichealthnonprofit.programfunding.controller.endpoints;
+package com.publichealthnonprofit.programfunding.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.publichealthnonprofit.programfunding.controller.model.ProgramData;
-import com.publichealthnonprofit.programfunding.controller.service.ProgramService;
-import com.publichealthnonprofit.programfunding.entity.Program;
+import com.publichealthnonprofit.programfunding.dto.ProgramDto;
+import com.publichealthnonprofit.programfunding.model.Program;
+import com.publichealthnonprofit.programfunding.service.ProgramService;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,7 +41,7 @@ public class ProgramController {
     @Operation(summary = "Get all programs", description = "Get all programs. Optionally, filter by donor, granting organization, donation, or financial grant.")
     @GetMapping("/program")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<ProgramData> getAllPrograms(
+    public List<ProgramDto> getAllPrograms(
             @Parameter(description = "Search all programs to which a specific donor has made at least one donation") @RequestParam(required = false) Optional<Long> donorId,
             @Parameter(description = "Search all programs to which at least one grant from a specific organization has been applied") @RequestParam(required = false) Optional<Long> grantingOrgId,
             @Parameter(description = "Search all programs associated with a specific donation") @RequestParam(required = false) Optional<Long> donationId,
@@ -105,7 +105,7 @@ public class ProgramController {
     @Operation(summary = "Create a new program", description = "Create a new program.")
     @PostMapping("/program")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ProgramData createProgram(@RequestBody Program program) {
+    public ProgramDto createProgram(@RequestBody Program program) {
         log.info("Creating program...");
         return programService.createProgram(program);
     }
@@ -115,7 +115,7 @@ public class ProgramController {
     @Operation(summary = "Get a specific program", description = "Get a program by its associated ID.")
     @GetMapping("/program/{programId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public ProgramData getProgramById(@PathVariable Long programId) {
+    public ProgramDto getProgramById(@PathVariable Long programId) {
         log.info("Getting program with ID {}...", programId);
         return programService.getProgramById(programId);
     }
@@ -125,7 +125,7 @@ public class ProgramController {
     @Operation(summary = "Update a specific program", description = "Update a program by its associated ID. Optionally, associate a financial grant or donation with the program.")
     @PutMapping("/program/{programId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public ProgramData updateProgram(
+    public ProgramDto updateProgram(
             @PathVariable Long programId,
             @RequestBody(required = false) Program program,
             @Parameter(description = "Associate a grant specified by numeric ID with the program") @RequestParam(required = false) Optional<Long> financialGrantId,

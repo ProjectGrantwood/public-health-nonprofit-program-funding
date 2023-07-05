@@ -1,0 +1,9 @@
+package com.publichealthnonprofit.programfunding.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.publichealthnonprofit.programfunding.model.GrantingOrg;
+
+public interface GrantingOrgRepository extends JpaRepository<GrantingOrg, Long> {
+    
+}

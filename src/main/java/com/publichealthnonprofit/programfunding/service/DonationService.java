@@ -1,4 +1,4 @@
-package com.publichealthnonprofit.programfunding.controller.service;
+package com.publichealthnonprofit.programfunding.service;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -11,75 +11,75 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.publichealthnonprofit.programfunding.controller.model.DonationData;
-import com.publichealthnonprofit.programfunding.controller.model.DonationData.DonationDonor;
-import com.publichealthnonprofit.programfunding.controller.model.DonationData.DonationProgram;
-import com.publichealthnonprofit.programfunding.dao.DonationDao;
-import com.publichealthnonprofit.programfunding.dao.DonorDao;
-import com.publichealthnonprofit.programfunding.dao.ProgramDao;
-import com.publichealthnonprofit.programfunding.entity.Donation;
-import com.publichealthnonprofit.programfunding.entity.Donor;
-import com.publichealthnonprofit.programfunding.entity.Program;
+import com.publichealthnonprofit.programfunding.dto.DonationDto;
+import com.publichealthnonprofit.programfunding.dto.DonationDto.DonationDonor;
+import com.publichealthnonprofit.programfunding.dto.DonationDto.DonationProgram;
+import com.publichealthnonprofit.programfunding.model.Donation;
+import com.publichealthnonprofit.programfunding.model.Donor;
+import com.publichealthnonprofit.programfunding.model.Program;
+import com.publichealthnonprofit.programfunding.repository.DonationRepository;
+import com.publichealthnonprofit.programfunding.repository.DonorRepository;
+import com.publichealthnonprofit.programfunding.repository.ProgramRepository;
 
 @Service
 public class DonationService {
     
     @Autowired
-    private DonationDao donationDao;
+    private DonationRepository donationDao;
     
     @Autowired
-    private DonorDao donorDao;
+    private DonorRepository donorDao;
     
     @Autowired
-    private ProgramDao programDao;
+    private ProgramRepository programDao;
 
     @Transactional(readOnly = true)
-    public List<DonationData> getAllDonationsByDonorId(Long donorIdValue) {
-        List<DonationData> allDonations = getAllDonations();
+    public List<DonationDto> getAllDonationsByDonorId(Long donorIdValue) {
+        List<DonationDto> allDonations = getAllDonations();
         return allDonations.stream().filter(donation -> donation.getDonor().getDonorId().equals(donorIdValue)).toList();
     }
 
     @Transactional(readOnly = true)
-    public List<DonationData> getAllDonationsByProgramId(Long programIdValue) {
-        List<DonationData> allDonations = getAllDonations();
+    public List<DonationDto> getAllDonationsByProgramId(Long programIdValue) {
+        List<DonationDto> allDonations = getAllDonations();
         return allDonations.stream().filter(donation -> donation.getPrograms().stream().anyMatch(program -> program.getProgramId().equals(programIdValue))).toList();
     }
 
     @Transactional(readOnly = true)
-    public List<DonationData> getAllDonations() {
-        return donationDao.findAll().stream().map(DonationData::new).toList();
+    public List<DonationDto> getAllDonations() {
+        return donationDao.findAll().stream().map(DonationDto::new).toList();
     }
 
     @Transactional(readOnly = false)
-    public DonationData createDonation(Donation donation, Long donorIdValue) {
+    public DonationDto createDonation(Donation donation, Long donorIdValue) {
         Donor donor = findDonorById(donorIdValue);
         donation.setDonor(donor);
-        return saveDonationFromDonationData(new DonationData(donation));
+        return saveDonationFromDonationData(new DonationDto(donation));
     }
     
     @Transactional(readOnly = false)
-    public DonationData createDonation(Donation donation, Long donorIdValue, Long programIdValue) {
+    public DonationDto createDonation(Donation donation, Long donorIdValue, Long programIdValue) {
         Donor donor = findDonorById(donorIdValue);
         donation.setDonor(donor);
-        return saveDonationFromDonationData(new DonationData(donation), programIdValue);
+        return saveDonationFromDonationData(new DonationDto(donation), programIdValue);
     }
     
-    private DonationData saveDonationFromDonationData(DonationData donationData) {
+    private DonationDto saveDonationFromDonationData(DonationDto donationData) {
         Long donationId = donationData.getDonationId();
         Donation donation = findOrCreateDonation(donationId);
         setFieldsInDonation(donation, donationData);
-        return new DonationData(donationDao.save(donation));
+        return new DonationDto(donationDao.save(donation));
     }
     
     @Transactional(readOnly = false)
-    public DonationData saveDonationFromDonationData(DonationData donationData, Long programIdValue) {
+    public DonationDto saveDonationFromDonationData(DonationDto donationData, Long programIdValue) {
         Long donationId = donationData.getDonationId();
         Donation donation = findOrCreateDonation(donationId);
         setFieldsInDonation(donation, donationData, programIdValue);
-        return new DonationData(donationDao.save(donation));
+        return new DonationDto(donationDao.save(donation));
     }
 
-    private void setFieldsInDonation(Donation donation, DonationData donationData) {
+    private void setFieldsInDonation(Donation donation, DonationDto donationData) {
         donation.setDonor(findDonorById(donationData.getDonor().getDonorId()));
         Set<Program> programs = new HashSet<>();
         List<DonationProgram> donationPrograms = donationData.getPrograms();
@@ -91,7 +91,7 @@ public class DonationService {
         donation.setDonationDate(donationData.getDonationDate());
     }
     
-    private void setFieldsInDonation(Donation donation, DonationData donationData, Long programIdValue) {
+    private void setFieldsInDonation(Donation donation, DonationDto donationData, Long programIdValue) {
         donation.setDonor(findDonorById(donationData.getDonor().getDonorId()));
         Set<Program> programs = new HashSet<>();
         List<DonationProgram> donationPrograms = donationData.getPrograms();
@@ -109,16 +109,16 @@ public class DonationService {
     }
 
     @Transactional(readOnly = false)
-    public DonationData updateDonation(Long donationId, Donation donation) {
+    public DonationDto updateDonation(Long donationId, Donation donation) {
         Donation donationToUpdate = findDonationById(donationId);
-        setUpdatedFieldsInDonation(donationToUpdate, new DonationData(donation));
-        return new DonationData(donationDao.save(donationToUpdate));
+        setUpdatedFieldsInDonation(donationToUpdate, new DonationDto(donation));
+        return new DonationDto(donationDao.save(donationToUpdate));
         
     }
 
     @Transactional(readOnly = true)
-    public DonationData getDonationById(Long donationId) {
-        return new DonationData(findDonationById(donationId));
+    public DonationDto getDonationById(Long donationId) {
+        return new DonationDto(findDonationById(donationId));
     }
     
     private Donation findOrCreateDonation(Long donationId) {
@@ -136,7 +136,7 @@ public class DonationService {
         return donationDao.findById(donationId).orElseThrow(() -> new NoSuchElementException("Donation not found for id " + donationId));
     }
     
-    private void setUpdatedFieldsInDonation(Donation donation, DonationData donationData) {
+    private void setUpdatedFieldsInDonation(Donation donation, DonationDto donationData) {
         DonationDonor updatedDonor = donationData.getDonor();
         Date updatedDonationDate = donationData.getDonationDate();
         Double updatedDonationAmount = donationData.getDonationAmount();

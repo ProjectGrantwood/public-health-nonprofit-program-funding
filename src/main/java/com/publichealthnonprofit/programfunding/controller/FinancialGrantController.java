@@ -1,4 +1,4 @@
-package com.publichealthnonprofit.programfunding.controller.endpoints;
+package com.publichealthnonprofit.programfunding.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.publichealthnonprofit.programfunding.controller.model.FinancialGrantData;
-import com.publichealthnonprofit.programfunding.controller.service.FinancialGrantService;
-import com.publichealthnonprofit.programfunding.entity.FinancialGrant;
+import com.publichealthnonprofit.programfunding.dto.FinancialGrantDto;
+import com.publichealthnonprofit.programfunding.model.FinancialGrant;
+import com.publichealthnonprofit.programfunding.service.FinancialGrantService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -43,7 +43,7 @@ public class FinancialGrantController {
     )
     @GetMapping("/financial_grant")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<FinancialGrantData> getAllFinancialGrants(
+    public List<FinancialGrantDto> getAllFinancialGrants(
         @Parameter(description = "Search all grants by Granting Organization") @RequestParam(required = false) Optional<Long> grantingOrgId, 
         @Parameter(description = "Search all grants associated with a specific program") @RequestParam(required = false) Optional<Long> programId) {
         if (grantingOrgId.isPresent() && programId.isPresent()) {
@@ -70,7 +70,7 @@ public class FinancialGrantController {
     )
     @PostMapping("/financial_grant")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public FinancialGrantData createFinancialGrant(
+    public FinancialGrantDto createFinancialGrant(
         @Parameter(description = "The organization through which the grant originates", required = true) @RequestParam(required = true) Optional<Long> grantingOrgId, 
         @Parameter(description = "The program with which the grant is associated") @RequestParam(required = false) Optional<Long> programId, @RequestBody FinancialGrant financialGrant) {
         if (grantingOrgId.isEmpty()){
@@ -94,7 +94,7 @@ public class FinancialGrantController {
     )
     @GetMapping("/financial_grant/{financialGrantId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public FinancialGrantData getFinancialGrantById(@PathVariable Long financialGrantId) {
+    public FinancialGrantDto getFinancialGrantById(@PathVariable Long financialGrantId) {
         log.info("Getting financial grant with ID {}...", financialGrantId);
         return financialGrantService.getFinancialGrantById(financialGrantId);
     }
@@ -107,7 +107,7 @@ public class FinancialGrantController {
     )
     @PutMapping("/financial_grant/{financialGrantId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public FinancialGrantData updateFinancialGrant(@PathVariable Long financialGrantId, @RequestBody FinancialGrant financialGrant) {
+    public FinancialGrantDto updateFinancialGrant(@PathVariable Long financialGrantId, @RequestBody FinancialGrant financialGrant) {
         log.info("Updating financial grant with ID {}...", financialGrantId);
         return financialGrantService.updateFinancialGrant(financialGrantId, financialGrant);
     }

@@ -1,4 +1,4 @@
-package com.publichealthnonprofit.programfunding.controller.endpoints;
+package com.publichealthnonprofit.programfunding.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import com.publichealthnonprofit.programfunding.controller.model.DonorData;
-import com.publichealthnonprofit.programfunding.controller.service.DonorService;
-import com.publichealthnonprofit.programfunding.entity.Donor;
+
+import com.publichealthnonprofit.programfunding.dto.DonorDto;
+import com.publichealthnonprofit.programfunding.model.Donor;
+import com.publichealthnonprofit.programfunding.service.DonorService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,7 +35,7 @@ public class DonorController {
     @Operation(summary = "Get all donors", description = "Retrieve a list of all donors in the database.")
     @GetMapping("/donor")
     @ResponseStatus(code = HttpStatus.OK)
-    public List<DonorData> getAllDonors() {
+    public List<DonorDto> getAllDonors() {
         log.info("Getting all donors...");
         return donorService.getAllDonors();
     }
@@ -44,7 +45,7 @@ public class DonorController {
     @Operation(summary = "Create a new donor", description = "Add a new donor to the database.")
     @PostMapping("/donor")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public DonorData createDonor(@RequestBody Donor donor) {
+    public DonorDto createDonor(@RequestBody Donor donor) {
         log.info("Creating donor...");
         return donorService.createDonor(donor);
     }
@@ -54,7 +55,7 @@ public class DonorController {
     @Operation(summary = "Get a specific donor", description = "Retrieve a donor from the database by their numeric ID.")
     @GetMapping("/donor/{donorId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public DonorData getDonorById(@PathVariable Long donorId) {
+    public DonorDto getDonorById(@PathVariable Long donorId) {
         log.info("Getting donor by ID {}...", donorId);
         return donorService.getDonorById(donorId);
     }
@@ -64,7 +65,7 @@ public class DonorController {
     @Operation(summary = "Update a specific donor", description = "Update a donor in the database by their numeric ID.")
     @PutMapping("/donor/{donorId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public DonorData updateDonor(@PathVariable Long donorId, @RequestBody Donor donor) {
+    public DonorDto updateDonor(@PathVariable Long donorId, @RequestBody Donor donor) {
         log.info("Updating donor with ID {}...", donorId);
         return donorService.updateDonor(donorId, donor);
     }

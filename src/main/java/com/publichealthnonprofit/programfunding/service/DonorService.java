@@ -1,4 +1,4 @@
-package com.publichealthnonprofit.programfunding.controller.service;
+package com.publichealthnonprofit.programfunding.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -8,36 +8,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.publichealthnonprofit.programfunding.controller.model.DonorData;
-import com.publichealthnonprofit.programfunding.dao.DonorDao;
-import com.publichealthnonprofit.programfunding.entity.Donor;
+import com.publichealthnonprofit.programfunding.dto.DonorDto;
+import com.publichealthnonprofit.programfunding.model.Donor;
+import com.publichealthnonprofit.programfunding.repository.DonorRepository;
 
 @Service
 public class DonorService {
     
     @Autowired
-    private DonorDao donorDao;
+    private DonorRepository donorDao;
 
     @Transactional(readOnly = true)
-    public List<DonorData> getAllDonors() {
-        return donorDao.findAll().stream().map(DonorData::new).toList();
+    public List<DonorDto> getAllDonors() {
+        return donorDao.findAll().stream().map(DonorDto::new).toList();
     }
     
     @Transactional(readOnly = true)
-    public DonorData getDonorById(Long donorId) {
-        return new DonorData(findDonorById(donorId));
+    public DonorDto getDonorById(Long donorId) {
+        return new DonorDto(findDonorById(donorId));
     }
 
     @Transactional(readOnly = false)
-    public DonorData createDonor(Donor donor) {
-        return saveDonorFromDonorData(new DonorData(donor));
+    public DonorDto createDonor(Donor donor) {
+        return saveDonorFromDonorData(new DonorDto(donor));
     }
 
     @Transactional(readOnly = false)
-    public DonorData updateDonor(Long donorId, Donor donor) {
+    public DonorDto updateDonor(Long donorId, Donor donor) {
         Donor donorToUpdate = findDonorById(donorId);
-        setUpdatedFieldsInDonor(donorToUpdate, new DonorData(donor));
-        return new DonorData(donorDao.save(donorToUpdate));
+        setUpdatedFieldsInDonor(donorToUpdate, new DonorDto(donor));
+        return new DonorDto(donorDao.save(donorToUpdate));
     }
 
     @Transactional(readOnly = false)
@@ -51,11 +51,11 @@ public class DonorService {
     }
     
     @Transactional(readOnly = false)
-    public DonorData saveDonorFromDonorData(DonorData donorData) {
+    public DonorDto saveDonorFromDonorData(DonorDto donorData) {
         Long donorId = donorData.getDonorId();
         Donor donor = findOrCreateDonor(donorId);
         setFieldsInDonor(donor, donorData);
-        return new DonorData(donorDao.save(donor));
+        return new DonorDto(donorDao.save(donor));
     }
     
     // Method for finding or creating a donor entity
@@ -75,7 +75,7 @@ public class DonorService {
     }
     
     //Method for setting the fields in a Donor entity based on a DonorData object
-    private void setFieldsInDonor(Donor donor, DonorData donorData) {
+    private void setFieldsInDonor(Donor donor, DonorDto donorData) {
         donor.setDonorName(donorData.getDonorName());
         donor.setDonorEmail(donorData.getDonorEmail());
         donor.setDonorPhone(donorData.getDonorPhone());
@@ -84,7 +84,7 @@ public class DonorService {
     }
     
     // Method for updating fields in a Donor entity only if those fields were present in the requestBody
-    private void setUpdatedFieldsInDonor(Donor donor, DonorData donorData) {
+    private void setUpdatedFieldsInDonor(Donor donor, DonorDto donorData) {
         String updatedDonorName = donorData.getDonorName();
         String updatedDonorEmail = donorData.getDonorEmail();
         String updatedDonorPhone = donorData.getDonorPhone();
