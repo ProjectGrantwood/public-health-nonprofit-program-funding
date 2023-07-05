@@ -12,7 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.publichealthnonprofit.programfunding.controller.endpointmappings.ProgramController;
+import com.publichealthnonprofit.programfunding.controller.endpoints.ProgramController;
 import com.publichealthnonprofit.programfunding.controller.model.ProgramData;
 import com.publichealthnonprofit.programfunding.controller.service.ProgramService;
 

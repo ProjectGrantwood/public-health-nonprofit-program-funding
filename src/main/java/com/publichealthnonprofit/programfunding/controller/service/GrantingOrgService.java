@@ -18,6 +18,7 @@ public class GrantingOrgService {
     @Autowired
     private GrantingOrgDao grantingOrgDao;
 
+    @Transactional(readOnly = true)
     public GrantingOrgData getGrantingOrgById(Long grantingOrgId) {
         return new GrantingOrgData(findGrantingOrgById(grantingOrgId));
     }
@@ -27,7 +28,7 @@ public class GrantingOrgService {
         return grantingOrgDao.findAll().stream().map(GrantingOrgData::new).toList();
     }
 
-    
+    @Transactional(readOnly = false)
     public GrantingOrgData createGrantingOrg(GrantingOrg grantingOrg) {
         return saveGrantingOrgFromGrantingOrgData(new GrantingOrgData(grantingOrg));
     }

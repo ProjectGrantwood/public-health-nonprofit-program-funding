@@ -1,4 +1,4 @@
-package com.publichealthnonprofit.programfunding.controller.endpointmappings;
+package com.publichealthnonprofit.programfunding.controller.endpoints;
 
 import java.util.List;
 import java.util.Optional;
