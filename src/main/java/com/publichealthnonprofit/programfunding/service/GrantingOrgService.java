@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.publichealthnonprofit.programfunding.dto.GrantingOrgDto;
 import com.publichealthnonprofit.programfunding.model.GrantingOrg;
-import com.publichealthnonprofit.programfunding.model.GrantingOrg.GrantingOrgType;
+import com.publichealthnonprofit.programfunding.model.GrantingOrgType;
 import com.publichealthnonprofit.programfunding.repository.GrantingOrgRepository;
 
 @Service

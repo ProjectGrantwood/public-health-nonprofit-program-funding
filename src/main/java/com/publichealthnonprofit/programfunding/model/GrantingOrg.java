@@ -5,6 +5,8 @@ import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -15,11 +17,6 @@ import lombok.ToString;
 @Entity
 @Data
 public class GrantingOrg {
-    
-    public enum GrantingOrgType {
-        FEDERAL,
-        PRIVATE
-    };
     
     // Primary Key
     
@@ -33,6 +30,8 @@ public class GrantingOrg {
     private String grantingOrgContactName;
     private String grantingOrgContactEmail;
     private String grantingOrgContactPhone;
+    
+    @Enumerated(EnumType.STRING)
     private GrantingOrgType grantingOrgType;
     
     // For referencing granting organizations in the grant table

@@ -55,7 +55,7 @@ public class FinancialGrant {
     
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToMany(mappedBy = "financialGrant", cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "financialGrants", cascade = CascadeType.PERSIST)
     private Set<Program> programs = new HashSet<>();
     
     
