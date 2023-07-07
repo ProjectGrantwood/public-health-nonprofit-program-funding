@@ -25,6 +25,10 @@ For more information on the project details, please refer to the proposal docume
 
 ---
 
+## ERD
+
+[Entity Relationship Diagram](https://github.com/ProjectGrantwood/public-health-nonprofit-program-funding/blob/main/src/main/resources/static/designdocs/PublicHealthNonprofitProgramFundingERD_final.png)
+
 ## Where the final project and the proposal differ
 
 ### *```Grant``` is now ```FinancialGrant```*
