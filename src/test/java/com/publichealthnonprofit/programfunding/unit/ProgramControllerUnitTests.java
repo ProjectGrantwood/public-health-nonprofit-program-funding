@@ -1,4 +1,4 @@
-package com.publichealthnonprofit.programfunding.controllerTests;
+package com.publichealthnonprofit.programfunding.unit;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -17,7 +17,7 @@ import com.publichealthnonprofit.programfunding.dto.ProgramDto;
 import com.publichealthnonprofit.programfunding.service.ProgramService;
 
 @WebMvcTest(ProgramController.class)
-class ProgramControllerMockMvcTest extends ProgramControllerTestDataGeneration {
+class ProgramControllerUnitTests extends ProgramControllerTestDataGeneration {
     
     @Autowired
     private MockMvc mockMvc;
