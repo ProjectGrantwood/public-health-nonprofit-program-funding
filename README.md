@@ -15,13 +15,13 @@ For more information on the project details, please refer to the proposal docume
 
 ## Technologies used
 
-- Java 17
-- Gradle
-- Spring Boot 3
-- Swagger 3
-- DBeaver
-- Advanced REST Client
-- MySQL Workbench
+- [Java 17](https://www.oracle.com/java/)
+- [Gradle](https://gradle.org/)
+- [Spring Boot 3](https://spring.io/projects/spring-boot)
+- [Swagger 3](https://swagger.io/)
+- [DBeaver](https://dbeaver.io/)
+- [Advanced REST Client](https://www.advancedrestclient.com/home)
+- [MySQL Workbench](https://www.mysql.com/products/workbench/)
 
 ---
 
@@ -33,7 +33,8 @@ The proposal lists a "grant" table, as well as an associated endpoint. Seeing as
 
 ### *Requests cannot expect extra JSON fields*  
 
-```PUT``` requests to both the ```FinancialGrant``` and ```Donation``` endpoints were both proposed to accept an extra optional JSON field called ```programAllotments```, which was intended to allow the user to specify how much of the grant or donation was to be allocated to each program. This would have required writing a custom deserializer, a task better suited to applications developed with Spring Framework instead of Spring Boot. This was how I learned that Spring Boot is good for quick development of straightforward applications, but not so great if complex behaviors are needed.
+```PUT``` requests to both the ```FinancialGrant``` and ```Donation``` endpoints were both proposed to accept an extra optional JSON field called ```programAllotments```, which was intended to allow the user to specify how much of the grant or donation was to be allocated to each program. This would have been represented as extra columns in the ```program_financial_grant``` and ```program_donation``` tables. I discovered during this project's development that this is not very straightforward to implement, though I am confident that it is possible and would certainly speak to what a solution would look like, if asked. I decided to postpone implementing this feature from the project in favor of ensuring I had a working CRUD API with a fully functional database.
+
 
 ### *Required query parameters added for ```POST```*
 
@@ -49,4 +50,4 @@ The proposal document listed full RAML documentation as a stretch goal. I was ab
 
 ### *Added some non-trivial test cases*
 
-I added a few non-trivial unit test cases to the ```ProgramControllerMockMvcTest``` class. Adding test cases was listed as "encouraged but not required" in the project description, but my understanding is that testing is immensely important to the maintainability of any codebase, and I felt that I needed to showcase some ability to write robust test cases. The included tests are far from exhaustive, but they do demonstrate that I have the ability to write tests that would be appropriate in a real-world application.
+I added a few unit test cases to the ```ProgramControllerUnitTests``` class. Adding test cases was listed as "encouraged but not required" in the project description, but my understanding is that testing is immensely important to the maintainability of any codebase, and I felt that I needed to showcase some ability to write robust test cases. The included tests are far from exhaustive, but they do demonstrate that I have the ability to write tests that would be appropriate in a real-world application.
