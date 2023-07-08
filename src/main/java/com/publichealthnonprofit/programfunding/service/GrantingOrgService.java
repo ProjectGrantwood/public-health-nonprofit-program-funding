@@ -16,7 +16,7 @@ import com.publichealthnonprofit.programfunding.repository.GrantingOrgRepository
 public class GrantingOrgService {
     
     @Autowired
-    private GrantingOrgRepository grantingOrgDao;
+    private GrantingOrgRepository grantingOrgRepository;
 
     @Transactional(readOnly = true)
     public GrantingOrgDto getGrantingOrgById(Long grantingOrgId) {
@@ -25,7 +25,7 @@ public class GrantingOrgService {
 
     @Transactional(readOnly = true)
     public List<GrantingOrgDto> getAllGrantingOrgs() {
-        return grantingOrgDao.findAll().stream().map(GrantingOrgDto::new).toList();
+        return grantingOrgRepository.findAll().stream().map(GrantingOrgDto::new).toList();
     }
 
     @Transactional(readOnly = false)
@@ -37,21 +37,21 @@ public class GrantingOrgService {
     public GrantingOrgDto updateGrantingOrg(Long grantingOrgId, GrantingOrg grantingOrg) {
         GrantingOrg grantingOrgToUpdate = findGrantingOrgById(grantingOrgId);
         updateFieldsInGrantingOrg(grantingOrgToUpdate, new GrantingOrgDto(grantingOrg));
-        return new GrantingOrgDto(grantingOrgDao.save(grantingOrgToUpdate));
+        return new GrantingOrgDto(grantingOrgRepository.save(grantingOrgToUpdate));
     }
     
     @Transactional(readOnly = false)
     public GrantingOrgDto saveGrantingOrgFromGrantingOrgData(GrantingOrgDto grantingOrgData) {
         GrantingOrg grantingOrg = findOrCreateGrantingOrg(grantingOrgData.getGrantingOrgId());
         setFieldsInGrantingOrg(grantingOrg, grantingOrgData);
-        return new GrantingOrgDto(grantingOrgDao.save(grantingOrg));
+        return new GrantingOrgDto(grantingOrgRepository.save(grantingOrg));
     }
     
     @Transactional(readOnly = false)
     public void deleteGrantingOrg(Long grantingOrgId) {
         GrantingOrg grantingOrg = findGrantingOrgById(grantingOrgId);
         if (grantingOrg.getFinancialGrants().isEmpty()) {
-            grantingOrgDao.delete(grantingOrg);
+            grantingOrgRepository.delete(grantingOrg);
         } else {
             throw new IllegalArgumentException("GrantingOrg with id " + grantingOrgId + " cannot be deleted because it has at least one grant associated with it.");
         }
@@ -69,7 +69,7 @@ public class GrantingOrgService {
     
     @Transactional(readOnly = true)
     public GrantingOrg findGrantingOrgById(Long grantingOrgId) {
-        return grantingOrgDao.findById(grantingOrgId).orElseThrow(() -> new NoSuchElementException("GrantingOrg not found with id: " + grantingOrgId));
+        return grantingOrgRepository.findById(grantingOrgId).orElseThrow(() -> new NoSuchElementException("GrantingOrg not found with id: " + grantingOrgId));
     }
     
     private void setFieldsInGrantingOrg(GrantingOrg grantingOrg, GrantingOrgDto grantingOrgData) {

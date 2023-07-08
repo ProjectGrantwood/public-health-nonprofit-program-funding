@@ -36,23 +36,23 @@ public class Program {
     
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(
         name = "program_financial_grant", 
         joinColumns = @JoinColumn(name = "program_id"),
         inverseJoinColumns = @JoinColumn(name = "financial_grant_id"))
     private Set<FinancialGrant> financialGrants = new HashSet<>();
     
+    
+    
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(
         name = "program_donation",
         joinColumns = @JoinColumn(name = "program_id"),
         inverseJoinColumns = @JoinColumn(name = "donation_id"))
     private Set<Donation> donations = new HashSet<>();
-    
-
     
     
     

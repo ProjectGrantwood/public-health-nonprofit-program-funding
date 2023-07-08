@@ -16,11 +16,11 @@ import com.publichealthnonprofit.programfunding.repository.DonorRepository;
 public class DonorService {
     
     @Autowired
-    private DonorRepository donorDao;
+    private DonorRepository donorRepository;
 
     @Transactional(readOnly = true)
     public List<DonorDto> getAllDonors() {
-        return donorDao.findAll().stream().map(DonorDto::new).toList();
+        return donorRepository.findAll().stream().map(DonorDto::new).toList();
     }
     
     @Transactional(readOnly = true)
@@ -37,14 +37,14 @@ public class DonorService {
     public DonorDto updateDonor(Long donorId, Donor donor) {
         Donor donorToUpdate = findDonorById(donorId);
         setUpdatedFieldsInDonor(donorToUpdate, new DonorDto(donor));
-        return new DonorDto(donorDao.save(donorToUpdate));
+        return new DonorDto(donorRepository.save(donorToUpdate));
     }
 
     @Transactional(readOnly = false)
     public void deleteDonor(Long donorId) {
         Donor donor = findDonorById(donorId);
         if (donor.getDonations().isEmpty()) {
-            donorDao.delete(donor);
+            donorRepository.delete(donor);
         } else {
             throw new IllegalArgumentException("Donor with id " + donorId + " cannot be deleted because they have donations associated with them.");
         }
@@ -55,7 +55,7 @@ public class DonorService {
         Long donorId = donorData.getDonorId();
         Donor donor = findOrCreateDonor(donorId);
         setFieldsInDonor(donor, donorData);
-        return new DonorDto(donorDao.save(donor));
+        return new DonorDto(donorRepository.save(donor));
     }
     
     // Method for finding or creating a donor entity
@@ -71,7 +71,7 @@ public class DonorService {
     
     // Method for getting an actual donor entity
     public Donor findDonorById(Long donorId){
-        return donorDao.findById(donorId).orElseThrow(() -> new NoSuchElementException("Donor not found for id: " + donorId));
+        return donorRepository.findById(donorId).orElseThrow(() -> new NoSuchElementException("Donor not found for id: " + donorId));
     }
     
     //Method for setting the fields in a Donor entity based on a DonorData object

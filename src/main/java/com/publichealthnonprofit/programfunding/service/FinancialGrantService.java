@@ -25,13 +25,13 @@ import com.publichealthnonprofit.programfunding.repository.ProgramRepository;
 public class FinancialGrantService {
     
     @Autowired
-    private FinancialGrantRepository financialGrantDao;
+    private FinancialGrantRepository financialGrantRepository;
     
     @Autowired
-    private GrantingOrgRepository grantingOrgDao;
+    private GrantingOrgRepository grantingOrgRepository;
     
     @Autowired
-    private ProgramRepository programDao;
+    private ProgramRepository programRepository;
 
     @Transactional(readOnly = true)
     public List<FinancialGrantDto> getAllFinancialGrantsByGrantingOrgId(Long grantingOrgIdValue) {
@@ -47,7 +47,7 @@ public class FinancialGrantService {
     
     @Transactional(readOnly = true)
     public List<FinancialGrantDto> getAllFinancialGrants() {
-        return financialGrantDao.findAll().stream().map(FinancialGrantDto::new).toList();
+        return financialGrantRepository.findAll().stream().map(FinancialGrantDto::new).toList();
     }
 
     @Transactional(readOnly = false)
@@ -68,7 +68,7 @@ public class FinancialGrantService {
         Long financialGrantId = financialGrantData.getFinancialGrantId();
         FinancialGrant financialGrant = findOrCreateFinancialGrant(financialGrantId);
         setFieldsInFinancialGrant(financialGrant, financialGrantData);
-        return new FinancialGrantDto(financialGrantDao.save(financialGrant));
+        return new FinancialGrantDto(financialGrantRepository.save(financialGrant));
     }
     
     @Transactional(readOnly = false)
@@ -76,7 +76,7 @@ public class FinancialGrantService {
         Long financialGrantId = financialGrantData.getFinancialGrantId();
         FinancialGrant financialGrant = findOrCreateFinancialGrant(financialGrantId);
         setFieldsInFinancialGrant(financialGrant, financialGrantData, programIdValue);
-        return new FinancialGrantDto(financialGrantDao.save(financialGrant));
+        return new FinancialGrantDto(financialGrantRepository.save(financialGrant));
     }
     
     private void setFieldsInFinancialGrant(FinancialGrant financialGrant, FinancialGrantDto financialGrantData) {
@@ -117,7 +117,7 @@ public class FinancialGrantService {
     public FinancialGrantDto updateFinancialGrant(Long financialGrantId, FinancialGrant financialGrant) {
         FinancialGrant financialGrantToUpdate = findFinancialGrantById(financialGrantId);
         setUpdatedFieldsInFinancialGrant(financialGrantToUpdate, new FinancialGrantDto(financialGrant));
-        return new FinancialGrantDto(financialGrantDao.save(financialGrantToUpdate));
+        return new FinancialGrantDto(financialGrantRepository.save(financialGrantToUpdate));
     }
 
     @Transactional(readOnly = true)
@@ -137,7 +137,7 @@ public class FinancialGrantService {
     
     @Transactional(readOnly = true)
     public FinancialGrant findFinancialGrantById(Long financialGrantId) {
-        return financialGrantDao.findById(financialGrantId).orElseThrow(() -> new NoSuchElementException("FinancialGrant not found for id " + financialGrantId));
+        return financialGrantRepository.findById(financialGrantId).orElseThrow(() -> new NoSuchElementException("FinancialGrant not found for id " + financialGrantId));
     }
     
     private void setUpdatedFieldsInFinancialGrant(FinancialGrant financialGrant, FinancialGrantDto financialGrantData) {
@@ -165,18 +165,30 @@ public class FinancialGrantService {
     
     @Transactional(readOnly = true)
     public GrantingOrg findGrantingOrgById(Long grantingOrgId) {
-        return grantingOrgDao.findById(grantingOrgId).orElseThrow(() -> new NoSuchElementException("GrantingOrg not found for id " + grantingOrgId));
+        return grantingOrgRepository.findById(grantingOrgId).orElseThrow(() -> new NoSuchElementException("GrantingOrg not found for id " + grantingOrgId));
     }
     
     @Transactional(readOnly = true)
     public Program findProgramById(Long programId){
-        return programDao.findById(programId).orElseThrow(() -> new NoSuchElementException("Program not found for id " + programId));
+        return programRepository.findById(programId).orElseThrow(() -> new NoSuchElementException("Program not found for id " + programId));
     }
 
     @Transactional(readOnly = false)
     public void deleteFinancialGrant(Long financialGrantId) {
-        if (financialGrantDao.existsById(financialGrantId)) {
-            financialGrantDao.deleteById(financialGrantId);
+        if (financialGrantRepository.existsById(financialGrantId)) {
+            // remove the financial grant from all programs with which it is associated
+            FinancialGrant financialGrant = findFinancialGrantById(financialGrantId);
+            
+            List<Program> programs = programRepository.findByFinancialGrantId(financialGrantId);
+
+            // This is slow and inefficient.  It would be better to have a set of queries that deletes the association
+            // I would attempt this as described here: https://thorben-janssen.com/avoid-cascadetype-delete-many-assocations/
+            for (Program program : programs) {
+                program.getFinancialGrants().remove(financialGrant);
+                programRepository.save(program);
+            }
+    
+            financialGrantRepository.deleteById(financialGrantId);
         } else {
             throw new NoSuchElementException("Grant not found for id " + financialGrantId);
         }

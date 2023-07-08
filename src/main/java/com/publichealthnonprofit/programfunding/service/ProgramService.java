@@ -22,7 +22,7 @@ import com.publichealthnonprofit.programfunding.repository.ProgramRepository;
 public class ProgramService {
     
     @Autowired
-    private ProgramRepository programDao;
+    private ProgramRepository programRepository;
     
     @Autowired
     private FinancialGrantRepository financialGrantDao;
@@ -32,33 +32,33 @@ public class ProgramService {
 
     @Transactional(readOnly = true)
     public List<ProgramDto> getAllProgramsAsProgramData() {
-        return programDao.findAll().stream().map(ProgramDto::new).toList();
+        return programRepository.findAll().stream().map(ProgramDto::new).toList();
     }
     
     @Transactional(readOnly = true)
     public List<Program> getAllPrograms() {
-        return programDao.findAll().stream().toList();
+        return programRepository.findAll().stream().toList();
     }
 
     @Transactional(readOnly = true)
     public List<ProgramDto> getAllProgramsByFinancialGrantId(Long financialGrantIdValue) {
-        return programDao.findByFinancialGrantId(financialGrantIdValue).stream().map(ProgramDto::new).toList();
+        return programRepository.findByFinancialGrantId(financialGrantIdValue).stream().map(ProgramDto::new).toList();
     }
 
 
     @Transactional(readOnly = true)
     public List<ProgramDto> getAllProgramsByDonationId(Long donationIdValue) {
-        return programDao.findByDonationId(donationIdValue).stream().map(ProgramDto::new).toList();
+        return programRepository.findByDonationId(donationIdValue).stream().map(ProgramDto::new).toList();
     }
 
     @Transactional(readOnly = true)
     public List<ProgramDto> getAllProgramsByGrantingOrgId(Long grantingOrgIdValue) {
-        return programDao.findByGrantingOrgId(grantingOrgIdValue).stream().map(ProgramDto::new).toList();
+        return programRepository.findByGrantingOrgId(grantingOrgIdValue).stream().map(ProgramDto::new).toList();
     }
 
     @Transactional(readOnly = true)
     public List<ProgramDto> getAllProgramsByDonorId(Long donorIdValue) {
-        return programDao.findByDonorId(donorIdValue).stream().map(ProgramDto::new).toList();
+        return programRepository.findByDonorId(donorIdValue).stream().map(ProgramDto::new).toList();
     }
     
     @Transactional(readOnly = false)
@@ -69,7 +69,7 @@ public class ProgramService {
             - Do the percentageBudget fields add up to 1.0?
           */
         String programName = program.getProgramName();
-        Optional<Boolean> programNameOptional = programDao.existsByProgramName(programName);
+        Optional<Boolean> programNameOptional = programRepository.existsByProgramName(programName);
         boolean programNameExists = programNameOptional.isPresent() && programNameOptional.get();
         Double programBudgetPercentageGrantFunded = program.getProgramBudgetPercentageGrantFunded();
         Double programBudgetPercentageDonationFunded = program.getProgramBudgetPercentageDonationFunded();
@@ -95,20 +95,20 @@ public class ProgramService {
     public ProgramDto updateProgram(Long programId, Program program) {
         Program programToUpdate = findProgramById(programId);
         updateFieldsInProgram(programToUpdate, new ProgramDto(program));
-        return new ProgramDto(programDao.save(programToUpdate));
+        return new ProgramDto(programRepository.save(programToUpdate));
         
     }
     
     @Transactional(readOnly = true)
     public Program findProgramById(Long programId) {
-        return programDao.findById(programId).orElseThrow(() -> new NoSuchElementException("Program not found with id " + programId));
+        return programRepository.findById(programId).orElseThrow(() -> new NoSuchElementException("Program not found with id " + programId));
     }
     
     @Transactional(readOnly = false)
     public ProgramDto saveProgramFromProgramData(ProgramDto programData) {
         Program program = findOrCreateProgram(programData.getProgramId());
         setFieldsInProgram(program, programData);
-        return new ProgramDto(programDao.save(program));
+        return new ProgramDto(programRepository.save(program));
     }
     
     private Program findOrCreateProgram(Long programId) {
@@ -155,7 +155,7 @@ public class ProgramService {
             throw new IllegalArgumentException("Financial grant is already associated with program");
         }
         program.getFinancialGrants().add(financialGrant);
-        return new ProgramDto(programDao.save(program));
+        return new ProgramDto(programRepository.save(program));
         
     }
 
@@ -167,7 +167,7 @@ public class ProgramService {
             throw new IllegalArgumentException("Donation is already associated with program");
         }
         program.getDonations().add(donation);
-        return new ProgramDto(programDao.save(program));
+        return new ProgramDto(programRepository.save(program));
     }
     
     @Transactional(readOnly = true)

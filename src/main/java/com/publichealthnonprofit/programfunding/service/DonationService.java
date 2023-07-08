@@ -25,13 +25,13 @@ import com.publichealthnonprofit.programfunding.repository.ProgramRepository;
 public class DonationService {
     
     @Autowired
-    private DonationRepository donationDao;
+    private DonationRepository donationRepository;
     
     @Autowired
-    private DonorRepository donorDao;
+    private DonorRepository donorRepository;
     
     @Autowired
-    private ProgramRepository programDao;
+    private ProgramRepository programRepository;
 
     @Transactional(readOnly = true)
     public List<DonationDto> getAllDonationsByDonorId(Long donorIdValue) {
@@ -47,7 +47,7 @@ public class DonationService {
 
     @Transactional(readOnly = true)
     public List<DonationDto> getAllDonations() {
-        return donationDao.findAll().stream().map(DonationDto::new).toList();
+        return donationRepository.findAll().stream().map(DonationDto::new).toList();
     }
 
     @Transactional(readOnly = false)
@@ -68,7 +68,7 @@ public class DonationService {
         Long donationId = donationData.getDonationId();
         Donation donation = findOrCreateDonation(donationId);
         setFieldsInDonation(donation, donationData);
-        return new DonationDto(donationDao.save(donation));
+        return new DonationDto(donationRepository.save(donation));
     }
     
     @Transactional(readOnly = false)
@@ -76,7 +76,7 @@ public class DonationService {
         Long donationId = donationData.getDonationId();
         Donation donation = findOrCreateDonation(donationId);
         setFieldsInDonation(donation, donationData, programIdValue);
-        return new DonationDto(donationDao.save(donation));
+        return new DonationDto(donationRepository.save(donation));
     }
 
     private void setFieldsInDonation(Donation donation, DonationDto donationData) {
@@ -112,7 +112,7 @@ public class DonationService {
     public DonationDto updateDonation(Long donationId, Donation donation) {
         Donation donationToUpdate = findDonationById(donationId);
         setUpdatedFieldsInDonation(donationToUpdate, new DonationDto(donation));
-        return new DonationDto(donationDao.save(donationToUpdate));
+        return new DonationDto(donationRepository.save(donationToUpdate));
         
     }
 
@@ -133,7 +133,7 @@ public class DonationService {
     
     @Transactional(readOnly = true)
     public Donation findDonationById(Long donationId) {
-        return donationDao.findById(donationId).orElseThrow(() -> new NoSuchElementException("Donation not found for id " + donationId));
+        return donationRepository.findById(donationId).orElseThrow(() -> new NoSuchElementException("Donation not found for id " + donationId));
     }
     
     private void setUpdatedFieldsInDonation(Donation donation, DonationDto donationData) {
@@ -153,18 +153,31 @@ public class DonationService {
     
     @Transactional(readOnly = true)
     public Program findProgramById(Long programId){
-        return programDao.findById(programId).orElseThrow(() -> new NoSuchElementException("Program not found for id " + programId));
+        return programRepository.findById(programId).orElseThrow(() -> new NoSuchElementException("Program not found for id " + programId));
     }
     
     @Transactional(readOnly = true)
     public Donor findDonorById(Long donorId){
-        return donorDao.findById(donorId).orElseThrow(() -> new NoSuchElementException("Donor not found for id " + donorId));
+        return donorRepository.findById(donorId).orElseThrow(() -> new NoSuchElementException("Donor not found for id " + donorId));
     }
     
     @Transactional(readOnly = false)
     public void deleteDonation(Long donationId) {
-        if (donationDao.existsById(donationId)) {
-            donationDao.deleteById(donationId);
+        if (donationRepository.existsById(donationId)) {
+            
+            // remove donation from all associated programs
+            Donation donation = findDonationById(donationId);
+            
+            List<Program> programs = programRepository.findByDonationId(donationId);
+            
+            // This is slow and inefficient.  It would be better to have a set of queries that deletes the association
+            // I would attempt this as described here: https://thorben-janssen.com/avoid-cascadetype-delete-many-assocations/
+            for (Program program : programs) {
+                program.getDonations().remove(donation);
+                programRepository.save(program);
+            }
+            
+            donationRepository.deleteById(donationId);
         } else {
             throw new NoSuchElementException("Donation not found for id " + donationId);
         }
