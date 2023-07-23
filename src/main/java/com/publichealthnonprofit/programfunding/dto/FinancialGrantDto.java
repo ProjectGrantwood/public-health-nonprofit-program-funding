@@ -3,10 +3,10 @@ package com.publichealthnonprofit.programfunding.dto;
 import java.util.Date;
 import java.util.List;
 
-import com.publichealthnonprofit.programfunding.model.FinancialGrant;
-import com.publichealthnonprofit.programfunding.model.GrantingOrg;
-import com.publichealthnonprofit.programfunding.model.Program;
-import com.publichealthnonprofit.programfunding.model.GrantingOrgType;
+import com.publichealthnonprofit.programfunding.entity.FinancialGrant;
+import com.publichealthnonprofit.programfunding.entity.GrantingOrg;
+import com.publichealthnonprofit.programfunding.entity.GrantingOrgType;
+import com.publichealthnonprofit.programfunding.entity.Program;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;

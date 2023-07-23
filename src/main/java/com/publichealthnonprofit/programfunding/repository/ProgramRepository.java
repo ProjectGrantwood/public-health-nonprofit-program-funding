@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.publichealthnonprofit.programfunding.model.Program;
+import com.publichealthnonprofit.programfunding.entity.Program;
 
 public interface ProgramRepository extends JpaRepository<Program, Long> {
     

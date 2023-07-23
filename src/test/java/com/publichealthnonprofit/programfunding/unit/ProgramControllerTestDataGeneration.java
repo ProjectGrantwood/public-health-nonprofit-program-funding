@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.publichealthnonprofit.programfunding.dto.ProgramDto;
-import com.publichealthnonprofit.programfunding.model.Program;
+import com.publichealthnonprofit.programfunding.entity.Program;
 
 public class ProgramControllerTestDataGeneration {
     

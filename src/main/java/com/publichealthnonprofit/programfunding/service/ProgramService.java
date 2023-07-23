@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.publichealthnonprofit.programfunding.dto.ProgramDto;
-import com.publichealthnonprofit.programfunding.model.Donation;
-import com.publichealthnonprofit.programfunding.model.FinancialGrant;
-import com.publichealthnonprofit.programfunding.model.Program;
+import com.publichealthnonprofit.programfunding.entity.Donation;
+import com.publichealthnonprofit.programfunding.entity.FinancialGrant;
+import com.publichealthnonprofit.programfunding.entity.Program;
 import com.publichealthnonprofit.programfunding.repository.DonationRepository;
 import com.publichealthnonprofit.programfunding.repository.FinancialGrantRepository;
 import com.publichealthnonprofit.programfunding.repository.ProgramRepository;

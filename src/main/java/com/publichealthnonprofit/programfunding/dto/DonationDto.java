@@ -3,9 +3,9 @@ package com.publichealthnonprofit.programfunding.dto;
 import java.util.Date;
 import java.util.List;
 
-import com.publichealthnonprofit.programfunding.model.Donation;
-import com.publichealthnonprofit.programfunding.model.Donor;
-import com.publichealthnonprofit.programfunding.model.Program;
+import com.publichealthnonprofit.programfunding.entity.Donation;
+import com.publichealthnonprofit.programfunding.entity.Donor;
+import com.publichealthnonprofit.programfunding.entity.Program;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.publichealthnonprofit.programfunding.dto.ProgramDto;
-import com.publichealthnonprofit.programfunding.model.Program;
+import com.publichealthnonprofit.programfunding.entity.Program;
 import com.publichealthnonprofit.programfunding.service.ProgramService;
 
 import io.swagger.v3.oas.annotations.Hidden;

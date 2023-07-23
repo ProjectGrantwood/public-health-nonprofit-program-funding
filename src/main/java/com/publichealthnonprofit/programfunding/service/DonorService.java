@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.publichealthnonprofit.programfunding.dto.DonorDto;
-import com.publichealthnonprofit.programfunding.model.Donor;
+import com.publichealthnonprofit.programfunding.entity.Donor;
 import com.publichealthnonprofit.programfunding.repository.DonorRepository;
 
 @Service
