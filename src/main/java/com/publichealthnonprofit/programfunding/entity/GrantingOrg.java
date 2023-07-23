@@ -19,6 +19,11 @@ import lombok.ToString;
 @Data
 public class GrantingOrg {
     
+    public enum GrantingOrgType {
+        FEDERAL,
+        PRIVATE
+    }
+    
     // Primary Key
     
     @Id
